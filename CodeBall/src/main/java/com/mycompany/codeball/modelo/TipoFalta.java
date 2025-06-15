@@ -1,21 +1,15 @@
 package com.mycompany.codeball.modelo;
 
 public class TipoFalta {
-    private int idFalta;
     private String descripcion;
     private String penalizacion;
 
-    public TipoFalta(int idFalta, String descripcion, String penalizacion) {
-        this.idFalta = idFalta;
+    public TipoFalta(String descripcion, String penalizacion) {
         this.descripcion = descripcion;
         this.penalizacion = penalizacion;
     }
 
     public TipoFalta() {
-    }
-
-    public int getIdFalta() {
-        return idFalta;
     }
 
     public String getDescripcion() {
@@ -24,10 +18,6 @@ public class TipoFalta {
 
     public String getPenalizacion() {
         return penalizacion;
-    }
-
-    public void setIdFalta(int idFalta) {
-        this.idFalta = idFalta;
     }
 
     public void setDescripcion(String descripcion) {
@@ -40,8 +30,7 @@ public class TipoFalta {
 
     @Override
     public String toString() {
-        return "TipoFalta{" + "idFalta=" + idFalta + ", descripcion=" + descripcion + ", penalizacion=" + penalizacion + '}';
+        return "TipoFalta{" + "descripcion=" + descripcion + ", penalizacion=" + penalizacion + '}';
     }
-    
-    
+
 }

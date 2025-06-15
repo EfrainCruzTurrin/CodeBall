@@ -1,12 +1,14 @@
 package com.mycompany.codeball.modelo;
 
+import java.util.Date;
+
 public class Arbitro {
     private int dni;
     private String nombre;
     private String apellido;
-    private String fechaNacimiento;
+    private Date fechaNacimiento;
 
-    public Arbitro(int dni, String nombre, String apellido, String fechaNacimiento) {
+    public Arbitro(int dni, String nombre, String apellido, Date fechaNacimiento) {
         this.dni = dni;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -25,7 +27,7 @@ public class Arbitro {
         return apellido;
     }
 
-    public String getFechaNacimiento() {
+    public Date getFechaNacimiento() {
         return fechaNacimiento;
     }
 
@@ -41,7 +43,7 @@ public class Arbitro {
         this.apellido = apellido;
     }
 
-    public void setFechaNacimiento(String fechaNacimiento) {
+    public void setFechaNacimiento(Date fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 

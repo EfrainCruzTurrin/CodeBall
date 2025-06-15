@@ -1,31 +1,19 @@
 package com.mycompany.codeball.modelo;
 
-public class EquipoTemporada extends Equipo {
-    private int idEquipoTemporada;
+import java.util.HashMap;
+
+public class EquipoTemporada {
+
     private String fechaCreacion;
     private Equipo equipo;
-    private Jugador jugador;
+    private HashMap<Jugador, Posicion> jugadorPosicion = new HashMap<>();
 
-    public EquipoTemporada(int idEquipoTemporada, String fechaCreacion, Equipo equipo, Jugador jugador, int idEquipo, String nombre, int cantidadJugadores) {
-        super(idEquipo, nombre, cantidadJugadores);
-        this.idEquipoTemporada = idEquipoTemporada;
+    public EquipoTemporada(String fechaCreacion, Equipo equipo) {
         this.fechaCreacion = fechaCreacion;
         this.equipo = equipo;
-        this.jugador = jugador;
-    }
-
-    public EquipoTemporada(int idEquipoTemporada, String fechaCreacion, Equipo equipo, Jugador jugador) {
-        this.idEquipoTemporada = idEquipoTemporada;
-        this.fechaCreacion = fechaCreacion;
-        this.equipo = equipo;
-        this.jugador = jugador;
     }
 
     public EquipoTemporada() {
-    }
-
-    public int getIdEquipoTemporada() {
-        return idEquipoTemporada;
     }
 
     public String getFechaCreacion() {
@@ -36,12 +24,8 @@ public class EquipoTemporada extends Equipo {
         return equipo;
     }
 
-    public Jugador getJugador() {
-        return jugador;
-    }
-
-    public void setIdEquipoTemporada(int idEquipoTemporada) {
-        this.idEquipoTemporada = idEquipoTemporada;
+    public HashMap<Jugador, Posicion> getJugadorPosicion() {
+        return jugadorPosicion;
     }
 
     public void setFechaCreacion(String fechaCreacion) {
@@ -52,15 +36,13 @@ public class EquipoTemporada extends Equipo {
         this.equipo = equipo;
     }
 
-    public void setJugador(Jugador jugador) {
-        this.jugador = jugador;
+    public void setJugadorPosicion(HashMap<Jugador, Posicion> jugadorPosicion) {
+        this.jugadorPosicion = jugadorPosicion;
     }
 
     @Override
     public String toString() {
-        return "EquipoTemporada{" + "idEquipoTemporada=" + idEquipoTemporada + ", fechaCreacion=" + fechaCreacion + ", equipo=" + equipo + ", jugador=" + jugador + '}';
+        return "EquipoTemporada{" + "fechaCreacion=" + fechaCreacion + ", equipo=" + equipo + ", jugadorPosicion=" + jugadorPosicion + '}';
     }
-    
-    
-    
+
 }
