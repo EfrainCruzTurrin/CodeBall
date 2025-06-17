@@ -1,16 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
-
 package com.mycompany.codeball;
 
-/**
- *
- * @author EFRAIN
- */
+import com.mycompany.codeball.conexion.ConectarBD;
+
 public class CodeBall {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        ConectarBD bd = new ConectarBD();
+        bd.conectar();
     }
 }
