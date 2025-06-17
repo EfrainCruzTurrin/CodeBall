@@ -14,7 +14,7 @@ public class ConectarBD {
         Connection con = null;
         try {
             con = DriverManager.getConnection(url, user, pass);
-            System.out.println("Conexion exitosa");
+            
         } catch (SQLException e) {
             e.printStackTrace();
         }
