@@ -10,4 +10,27 @@
         <maven.compiler.release>24</maven.compiler.release>
         <exec.mainClass>com.mycompany.codeball.CodeBall</exec.mainClass>
     </properties>
+    <dependencies>
+        <!-- Dependencia de Hibernate -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>5.6.10.Final</version>
+        </dependency>
+
+        <!-- Dependencia para MySQL JDBC -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.28</version>
+        </dependency>
+
+        <!-- Dependencia de JPA (solo si usas JPA con Hibernate) -->
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>javax.persistence-api</artifactId>
+            <version>2.2</version>
+        </dependency>
+    </dependencies>
+    
 </project>
