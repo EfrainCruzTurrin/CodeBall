@@ -12,7 +12,7 @@ public class FaseEliminatoria extends Fase{
     }
 
     public ArrayList<EquipoTemporada> getEquiposIniciales() {
-        return equiposIniciales;
+        return equiposIniciales;    
     }
 
     public HashMap<EquipoTemporada, FaseDeEliminatoria> getEquiposEliminados() {
