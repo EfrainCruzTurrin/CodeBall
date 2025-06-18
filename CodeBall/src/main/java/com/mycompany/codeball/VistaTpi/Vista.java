@@ -2,17 +2,35 @@
 package com.mycompany.codeball.VistaTpi;
 
 import java.util.Scanner;
+import java.sql.Date;
 
 
 public class Vista {
     private Scanner sc = new Scanner (System.in);  
     
-    public int pedirInt(){
-        return Integer.parseInt(sc.nextLine()); 
+    public int pedirInt() {
+        while (true) {
+            try {
+                return Integer.parseInt(sc.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.print("Entrada inválida. Ingrese un número: ");
+            }
+        }
     }
     
     public String pedirString(){
         return (sc.nextLine()); 
+    }
+    
+    public Date pedirFecha(){
+        System.out.print("Ingrese el año: ");
+        String anio = pedirString();
+        System.out.print("Ingrese el mes: ");
+        String mes = pedirString();
+        System.out.print("Ingrese el dia: ");
+        String dia = pedirString();
+        Date fecha = Date.valueOf(anio+"-"+mes+"-"+dia);        
+        return fecha; 
     }
     
     public void mensaje (String mensaje){
@@ -25,12 +43,12 @@ public class Vista {
                 "\n2-Registrar nuevo Equipo: " +
                 "\n3-Registrar Árbitro: " +
                 "\n4-Registrar Torneo" +
-                "\n4-Registrar Partido" +
-                "\n4-Registrar Torneo" +
-                "\n6-Seleccionar Torneo: " +
-                "\n5-Lista de Jugadores: " +
-                "\n6-Lista de Equipos: " +
-                "\n -Lista de Equipos: " +
+                "\n5-Registrar Partido" +
+                "\n6-Registrar Torneo" +
+                "\n7-Seleccionar Torneo: " +
+                "\n8-Lista de Jugadores: " +
+                "\n9-Lista de Equipos: " +
+                "\n10-Lista de Equipos: " +
                 "\n0-Salir");
     }
     

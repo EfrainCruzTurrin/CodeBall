@@ -1,6 +1,6 @@
 package com.mycompany.codeball.modelo;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Jugador {
     private int dni;

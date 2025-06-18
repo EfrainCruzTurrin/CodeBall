@@ -1,6 +1,6 @@
 package com.mycompany.codeball.modelo;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Arbitro {
     private int dni;

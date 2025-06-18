@@ -4,6 +4,7 @@
  */
 package com.mycompany.codeball.controlador;
 
+import com.mycompany.codeball.VistaTpi.Vista;
 import com.mycompany.codeball.modelo.Arbitro;
 import com.mycompany.codeball.modelo.Equipo;
 import com.mycompany.codeball.modelo.EquipoTemporada;
@@ -21,12 +22,14 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.sql.Date;
 
 /**
  *
  * @author EFRAIN
  */
 public class ControladorCodeball {
+
     private ArrayList<Jugador> jugadores = new ArrayList<>();
     private ArrayList<Arbitro> arbitros = new ArrayList<>();
     private ArrayList<Equipo> equipos = new ArrayList<>();
@@ -40,18 +43,81 @@ public class ControladorCodeball {
     private ArrayList<TipoFalta> tipoFaltas = new ArrayList<>();
     private ArrayList<Torneo> torneos = new ArrayList<>();
     private ArrayList<FaseDeEliminatoria> fasesDeEliminatoria = new ArrayList<>();
-    
+    private Vista vista = new Vista();
+
     static String url = "jdbc:mysql://localhost:3306/codeball";
     static String user = "root";
     static String pass = "basededatos";
-    
+
     public static void conectar() {
         try {
-           Connection con = DriverManager.getConnection(url, user, pass);
-            System.out.println("Conexion Exitosa");
+            Connection con = DriverManager.getConnection(url, user, pass);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public void registrarJugador() {
+//        private int dni;
+//        private String nombre;
+//        private String apellido;
+//        private Date fechaNacimiento;
+        vista.mensaje("Ingrsese el DNI o numero de identificación similar.");
+        int dni = vista.pedirInt();
+        vista.mensaje("Ingrsese el nombre.");
+        String nombre = vista.pedirString();
+        vista.mensaje("Ingrsese el apellido.");
+        String apellido = vista.pedirString();
+        vista.mensaje("Ingrsese la fecha de nacimiento.");
+        Date fecha = vista.pedirFecha();
+        jugadores.add(new Jugador(dni, nombre, apellido, fecha));
+    }
+
+    public void registrarArbitro() {
+//        private int dni;
+//        private String nombre;
+//        private String apellido;
+//        private Date fechaNacimiento;
+        vista.mensaje("Ingrsese el DNI o codigo de identificación similar.");
+        int dni = vista.pedirInt();
+        vista.mensaje("Ingrsese el nombre.");
+        String nombre = vista.pedirString();
+        vista.mensaje("Ingrsese el apellido.");
+        String apellido = vista.pedirString();
+        vista.mensaje("Ingrsese la fecha de nacimiento.");
+        Date fecha = vista.pedirFecha();
+        boolean existencia = false;
+        for (Jugador j : jugadores) {
+            if (j.getDni() == dni) {
+                existencia = true;
+            }
+        }
+        if(existencia){
+            vista.mensaje("Ese jugador ya existe.");
+        }else{
+            arbitros.add(new Arbitro(dni, nombre, apellido, fecha));
+        }
+        
+    }
+
+    public void registrarEquipo() {
+        
+//        private String nombre;
+//        private int cantidadJugadores;
+        vista.mensaje("Ingrsese el nombre.");
+        String nombre = vista.pedirString();
+        boolean existencia = false;
+        for (Equipo e : equipos) {
+            if (e.getNombre().equalsIgnoreCase(nombre)) {
+                existencia = true;
+            }
+        }
+        if(existencia){
+            vista.mensaje("Ese equipo ya existe.");
+        }else{
+            equipos.add(new Equipo(nombre, 0));
+        }
+        
     }
     
     

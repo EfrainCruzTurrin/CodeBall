@@ -6,7 +6,7 @@ public class Equipo {
     private String nombre;
     private int cantidadJugadores;
 
-    public Equipo(int idEquipo, String nombre, int cantidadJugadores) {
+    public Equipo(String nombre, int cantidadJugadores) {
         this.nombre = nombre;
         this.cantidadJugadores = cantidadJugadores;
     }

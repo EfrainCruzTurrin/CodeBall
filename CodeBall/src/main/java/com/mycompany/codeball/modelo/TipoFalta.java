@@ -2,9 +2,9 @@ package com.mycompany.codeball.modelo;
 
 public class TipoFalta {
     private String descripcion;
-    private String penalizacion;
+    private Penalizacion penalizacion;
 
-    public TipoFalta(String descripcion, String penalizacion) {
+    public TipoFalta(String descripcion, Penalizacion penalizacion) {
         this.descripcion = descripcion;
         this.penalizacion = penalizacion;
     }
@@ -16,7 +16,7 @@ public class TipoFalta {
         return descripcion;
     }
 
-    public String getPenalizacion() {
+    public Penalizacion getPenalizacion() {
         return penalizacion;
     }
 
@@ -24,7 +24,7 @@ public class TipoFalta {
         this.descripcion = descripcion;
     }
 
-    public void setPenalizacion(String penalizacion) {
+    public void setPenalizacion(Penalizacion penalizacion) {
         this.penalizacion = penalizacion;
     }
 
