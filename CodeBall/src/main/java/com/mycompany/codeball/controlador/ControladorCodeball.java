@@ -65,11 +65,11 @@ public class ControladorCodeball {
 //        private Date fechaNacimiento;
         vista.mensaje("Ingrsese el DNI o numero de identificación similar.");
         int dni = vista.pedirInt();
-        vista.mensaje("Ingrsese el nombre.");
+        vista.mensaje("Ingrese el nombre.");
         String nombre = vista.pedirString();
-        vista.mensaje("Ingrsese el apellido.");
+        vista.mensaje("Ingrese el apellido.");
         String apellido = vista.pedirString();
-        vista.mensaje("Ingrsese la fecha de nacimiento.");
+        vista.mensaje("Ingrese la fecha de nacimiento.");
         Date fecha = vista.pedirFecha();
 
         boolean existencia = false;
@@ -90,13 +90,13 @@ public class ControladorCodeball {
 //        private String nombre;
 //        private String apellido;
 //        private Date fechaNacimiento;
-        vista.mensaje("Ingrsese el DNI o codigo de identificación similar.");
+        vista.mensaje("Ingrese el DNI o codigo de identificación similar.");
         int dni = vista.pedirInt();
-        vista.mensaje("Ingrsese el nombre.");
+        vista.mensaje("Ingrese el nombre.");
         String nombre = vista.pedirString();
-        vista.mensaje("Ingrsese el apellido.");
+        vista.mensaje("Ingrese el apellido.");
         String apellido = vista.pedirString();
-        vista.mensaje("Ingrsese la fecha de nacimiento.");
+        vista.mensaje("Ingrese la fecha de nacimiento.");
         Date fecha = vista.pedirFecha();
 
         boolean existencia = false;
@@ -115,7 +115,7 @@ public class ControladorCodeball {
     public void registrarEquipo() {
 //        private String nombre;
 //        private int cantidadJugadores;
-        vista.mensaje("Ingrsese el nombre.");
+        vista.mensaje("Ingrese el nombre.");
         String nombre = vista.pedirString();
 
         boolean existencia = false;
