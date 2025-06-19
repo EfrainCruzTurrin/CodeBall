@@ -14,10 +14,3 @@ public class Vista {
                 "\n6-Lista de Equipos: " +
                 "\n0-Salir");
     }
-
-
-    public int getOpcionMenu(){
-        this.mostrarMenu();                    // Mostrar las opciones
-        System.out.print("Ingrese la opción: ");
-        return this.sc.nextInt();              // Leer y retornar número elegido
-    }
