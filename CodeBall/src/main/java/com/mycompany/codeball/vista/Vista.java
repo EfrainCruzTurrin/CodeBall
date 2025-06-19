@@ -37,6 +37,19 @@ public class Vista {
         System.out.println(mensaje);
     }
     
+     public int eleccionSiNo(){ 
+        int dato = 0;
+        while(dato != 1 || dato != 2){
+            mensaje("1. Si");
+            mensaje("2. No");
+            dato = pedirInt();
+            if(dato != 1 || dato != 2){
+                mensaje("Dato no valido.");
+            }
+        }
+        return dato;
+    }
+     
     public void mostrarMenu(){
         System.out.println("Elija una opción: " +
                 "\n1-Registrar nuevo Jugador: " +
@@ -69,4 +82,4 @@ public class Vista {
                 "\n4-Resultado de Fase de Puntos" +
                 "\n0-Salir");
     }
-}   
+}  

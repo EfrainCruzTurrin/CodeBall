@@ -4,7 +4,6 @@
  */
 package com.mycompany.codeball.controlador;
 
-import com.mycompany.codeball.VistaTpi.Vista;
 import com.mycompany.codeball.modelo.Arbitro;
 import com.mycompany.codeball.modelo.Equipo;
 import com.mycompany.codeball.modelo.EquipoTemporada;
@@ -18,11 +17,13 @@ import com.mycompany.codeball.modelo.Penalizacion;
 import com.mycompany.codeball.modelo.Posicion;
 import com.mycompany.codeball.modelo.TipoFalta;
 import com.mycompany.codeball.modelo.Torneo;
+import com.mycompany.codeball.vista.Vista;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.sql.Date;
+import java.util.HashMap;
 
 /**
  *
@@ -70,7 +71,18 @@ public class ControladorCodeball {
         String apellido = vista.pedirString();
         vista.mensaje("Ingrsese la fecha de nacimiento.");
         Date fecha = vista.pedirFecha();
-        jugadores.add(new Jugador(dni, nombre, apellido, fecha));
+
+        boolean existencia = false;
+        for (Jugador j : jugadores) {
+            if (j.getDni() == dni) {
+                existencia = true;
+            }
+        }
+        if (existencia) {
+            vista.mensaje("Ese codigo de identificacion ya existe.");
+        } else {
+            jugadores.add(new Jugador(dni, nombre, apellido, fecha));
+        }
     }
 
     public void registrarArbitro() {
@@ -86,39 +98,79 @@ public class ControladorCodeball {
         String apellido = vista.pedirString();
         vista.mensaje("Ingrsese la fecha de nacimiento.");
         Date fecha = vista.pedirFecha();
+
         boolean existencia = false;
-        for (Jugador j : jugadores) {
-            if (j.getDni() == dni) {
+        for (Arbitro a : arbitros) {
+            if (a.getDni() == dni) {
                 existencia = true;
             }
         }
-        if(existencia){
-            vista.mensaje("Ese jugador ya existe.");
-        }else{
+        if (existencia) {
+            vista.mensaje("Ese codigo de identificacion ya existe.");
+        } else {
             arbitros.add(new Arbitro(dni, nombre, apellido, fecha));
         }
-        
     }
 
     public void registrarEquipo() {
-        
 //        private String nombre;
 //        private int cantidadJugadores;
         vista.mensaje("Ingrsese el nombre.");
         String nombre = vista.pedirString();
+
         boolean existencia = false;
         for (Equipo e : equipos) {
             if (e.getNombre().equalsIgnoreCase(nombre)) {
                 existencia = true;
             }
         }
-        if(existencia){
+        if (existencia) {
             vista.mensaje("Ese equipo ya existe.");
-        }else{
-            equipos.add(new Equipo(nombre, 0));
+        } else {
+            equipos.add(new Equipo(nombre));
         }
-        
     }
-    
-    
+
+    public void registrarEquipoTemporada() {
+//    private Date fechaCreacion;
+//    private Equipo equipo;
+//    private HashMap<Jugador, Posicion> jugadorPosicion = new HashMap<>();
+        vista.mensaje("Inserte a fecha de su creacion.");
+        Date fecha = vista.pedirFecha();
+        vista.mensaje("Seleccione al equipo que representa.");
+        int contador = 1;
+        for (Equipo e : equipos) {
+            vista.mensaje(contador + " | " + e.getNombre());
+            contador++;
+        }
+        int numeroDeEquipo = vista.pedirInt() - 1;
+        ArrayList<Integer> numerosDejugadores = new ArrayList<>();
+        vista.mensaje("Seleccione sus jugadores. ");
+
+        int numeroRegistro = 1;
+        while (numeroRegistro != 0) {
+
+            contador = 1;
+            vista.mensaje("0. Salir");
+            for (Jugador j : jugadores) {
+                vista.mensaje(contador + " | " + j.getDni() + " | " + j.getNombre() + " " + j.getApellido());
+            }
+            numeroRegistro = vista.pedirInt();
+
+            if (numeroRegistro != 0) {
+                if (numerosDejugadores.contains(numeroRegistro)) {
+                    vista.mensaje("Ese jugador ya esta en el equipo.");
+                } else {
+                    numerosDejugadores.add(numeroRegistro);
+                    vista.mensaje("Tus jugadores hasta ahora.");
+                    for(int n: numerosDejugadores){
+                        vista.mensaje(n + " | " + jugadores.get(n-1).getNombre() + " " + jugadores.get(n-1).getApellido() );
+                    }
+                    
+                }
+            }
+        }
+
+    }
+
 }
