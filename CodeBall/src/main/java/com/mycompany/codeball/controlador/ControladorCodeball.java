@@ -62,7 +62,7 @@ public class ControladorCodeball {
     }
     
     public void cargarEquipos() throws SQLException{
-        String sql = "\"SELECT id_equipo, nombre, pais, director_tecnico FROM equipo";
+        String sql = "SELECT id_equipo, nombre, pais, director_tecnico FROM equipo";
         int puntos = 0;
         try(PreparedStatement ps = con.prepareStatement(sql);
         ResultSet rs = ps.executeQuery()){
@@ -74,7 +74,7 @@ public class ControladorCodeball {
                 rs.getString("director_tecnico"),
                 puntos
                 );
-                
+                System.out.println("Cargando equipo: " + rs.getString("nombre"));
                 equipos.add(e);
             }
         }
