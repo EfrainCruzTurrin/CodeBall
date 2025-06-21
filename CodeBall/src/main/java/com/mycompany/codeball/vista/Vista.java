@@ -1,4 +1,3 @@
-
 package com.mycompany.codeball.vista;
 
 import java.util.Scanner;

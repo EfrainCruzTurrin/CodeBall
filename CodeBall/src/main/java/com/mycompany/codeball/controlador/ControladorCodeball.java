@@ -23,6 +23,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.HashMap;
 
 /**
@@ -45,18 +47,40 @@ public class ControladorCodeball {
     private ArrayList<Torneo> torneos = new ArrayList<>();
     private ArrayList<FaseDeEliminatoria> fasesDeEliminatoria = new ArrayList<>();
     private Vista vista = new Vista();
-
+    private Connection con;
     static String url = "jdbc:mysql://localhost:3306/codeball";
     static String user = "root";
     static String pass = "basededatos";
 
-    public static void conectar() {
+    public void conectar() {
         try {
-            Connection con = DriverManager.getConnection(url, user, pass);
+            con = DriverManager.getConnection(url, user, pass);
+            System.out.println("Conectado");
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+    
+    public void cargarEquipos() throws SQLException{
+        String sql = "SELECT nombre FROM equipo";
+        try(PreparedStatement ps = con.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery()){
+            while(rs.next()){
+                Equipo e = new Equipo(
+                rs.getString("nombre")
+                );
+                equipos.add(e);
+            }
+        }
+        
+    }
+    
+    public void listarEquipos(){
+        for (Equipo e : equipos){
+            System.out.println(e);
+        }
+    }
+    
 
     public void registrarJugador() {
 //        private int dni;
