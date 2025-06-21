@@ -62,13 +62,19 @@ public class ControladorCodeball {
     }
     
     public void cargarEquipos() throws SQLException{
-        String sql = "SELECT nombre FROM equipo";
+        String sql = "\"SELECT id_equipo, nombre, pais, director_tecnico FROM equipo";
+        int puntos = 0;
         try(PreparedStatement ps = con.prepareStatement(sql);
         ResultSet rs = ps.executeQuery()){
             while(rs.next()){
                 Equipo e = new Equipo(
-                rs.getString("nombre")
+                rs.getInt("id_equipo"),
+                rs.getString("nombre"),
+                rs.getString("pais"),
+                rs.getString("director_tecnico"),
+                puntos
                 );
+                
                 equipos.add(e);
             }
         }
@@ -135,25 +141,27 @@ public class ControladorCodeball {
             arbitros.add(new Arbitro(dni, nombre, apellido, fecha));
         }
     }
-
-    public void registrarEquipo() {
-//        private String nombre;
-//        private int cantidadJugadores;
-        vista.mensaje("Ingrese el nombre.");
-        String nombre = vista.pedirString();
-
-        boolean existencia = false;
-        for (Equipo e : equipos) {
-            if (e.getNombre().equalsIgnoreCase(nombre)) {
-                existencia = true;
-            }
-        }
-        if (existencia) {
-            vista.mensaje("Ese equipo ya existe.");
-        } else {
-            equipos.add(new Equipo(nombre));
-        }
-    }
+//METODO REGISTRAR EQUIPO COMENTADO
+    
+    
+//   public void registrarEquipo() {
+//   private String nombre;
+//    private int cantidadJugadores;
+//        vista.mensaje("Ingrese el nombre.");
+//        String nombre = vista.pedirString();
+//
+//        boolean existencia = false;
+//        for (Equipo e : equipos) {
+//            if (e.getNombre().equalsIgnoreCase(nombre)) {
+//                existencia = true;
+//            }
+//        }
+//        if (existencia) {
+//            vista.mensaje("Ese equipo ya existe.");
+//        } else {
+//            equipos.add(new Equipo(nombre));
+//        }
+//    }
 
     public void registrarEquipoTemporada() {
 //    private Date fechaCreacion;
