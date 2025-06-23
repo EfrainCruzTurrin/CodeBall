@@ -5,12 +5,14 @@ import java.util.HashMap;
 
 public class Fase {
 
-    private String tipo;
-    private ArrayList<Partido> partidos = new ArrayList<>();
-    private HashMap<Jugador, Penalizacion> jugadoresPenalizados = new HashMap<>();
+    protected String tipo;
+    protected ArrayList<Partido> partidos = new ArrayList<>();
+    protected HashMap<Jugador, Penalizacion> jugadoresPenalizados = new HashMap<>();
 
-    public Fase(String tipo) {
+    public Fase(String tipo, ArrayList<Partido> partidos, HashMap<Jugador, Penalizacion> jugadoresPenalizados) {
         this.tipo = tipo;
+        this.partidos = partidos;
+        this.jugadoresPenalizados = jugadoresPenalizados;
     }
 
     public Fase() {

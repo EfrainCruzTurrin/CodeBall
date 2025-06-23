@@ -1,14 +1,15 @@
 package com.mycompany.codeball.modelo;
 
-import java.util.HashMap;
+import java.sql.Date;
+import java.util.ArrayList;
 
 public class EquipoTemporada {
 
-    private String fechaCreacion;
+    private Date fechaCreacion;
     private Equipo equipo;
-    private HashMap<Jugador, Posicion> jugadorPosicion = new HashMap<>();
+    private ArrayList<Jugador> jugadores = new ArrayList<>();
 
-    public EquipoTemporada(String fechaCreacion, Equipo equipo) {
+    public EquipoTemporada(Date fechaCreacion, Equipo equipo) {
         this.fechaCreacion = fechaCreacion;
         this.equipo = equipo;
     }
@@ -16,7 +17,7 @@ public class EquipoTemporada {
     public EquipoTemporada() {
     }
 
-    public String getFechaCreacion() {
+    public Date getFechaCreacion() {
         return fechaCreacion;
     }
 
@@ -24,11 +25,11 @@ public class EquipoTemporada {
         return equipo;
     }
 
-    public HashMap<Jugador, Posicion> getJugadorPosicion() {
-        return jugadorPosicion;
+    public ArrayList<Jugador> getJugadores() {
+        return jugadores;
     }
 
-    public void setFechaCreacion(String fechaCreacion) {
+    public void setFechaCreacion(Date fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
 
@@ -36,13 +37,13 @@ public class EquipoTemporada {
         this.equipo = equipo;
     }
 
-    public void setJugadorPosicion(HashMap<Jugador, Posicion> jugadorPosicion) {
-        this.jugadorPosicion = jugadorPosicion;
+    public void setJugadores(ArrayList<Jugador> jugadores) {
+        this.jugadores = jugadores;
     }
 
     @Override
     public String toString() {
-        return "EquipoTemporada{" + "fechaCreacion=" + fechaCreacion + ", equipo=" + equipo + ", jugadorPosicion=" + jugadorPosicion + '}';
+        return "EquipoTemporada{" + "fechaCreacion=" + fechaCreacion + ", equipo=" + equipo + ", jugadorPosicion=" + jugadores + '}';
     }
 
 }

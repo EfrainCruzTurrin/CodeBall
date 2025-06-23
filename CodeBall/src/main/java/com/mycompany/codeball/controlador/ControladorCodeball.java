@@ -36,7 +36,7 @@ public class ControladorCodeball {
     private ArrayList<Jugador> jugadores = new ArrayList<>();
     private ArrayList<Arbitro> arbitros = new ArrayList<>();
     private ArrayList<Equipo> equipos = new ArrayList<>();
-    private ArrayList<EquipoTemporada> equipostemporada = new ArrayList<>();
+    private ArrayList<EquipoTemporada> equiposTemporada = new ArrayList<>();
     private ArrayList<Fase> fases = new ArrayList<>();
     private ArrayList<FasePuntos> fasesPuntos = new ArrayList<>();
     private ArrayList<FaseEliminatoria> fasesEliminatoria = new ArrayList<>();
@@ -60,33 +60,31 @@ public class ControladorCodeball {
             e.printStackTrace();
         }
     }
-    
-    public void cargarEquipos() throws SQLException{
-        String sql = "SELECT id_equipo, nombre, pais, director_tecnico FROM equipo";
-        int puntos = 0;
-        try(PreparedStatement ps = con.prepareStatement(sql);
-        ResultSet rs = ps.executeQuery()){
-            while(rs.next()){
-                Equipo e = new Equipo(
-                rs.getInt("id_equipo"),
-                rs.getString("nombre"),
-                rs.getString("pais"),
-                rs.getString("director_tecnico"),
-                puntos
-                );
-                System.out.println("Cargando equipo: " + rs.getString("nombre"));
-                equipos.add(e);
-            }
-        }
-        
-    }
-    
-    public void listarEquipos(){
-        for (Equipo e : equipos){
+
+//    public void cargarEquipos() throws SQLException {
+//        String sql = "SELECT id_equipo, nombre, pais, director_tecnico FROM equipo";
+//        int puntos = 0;
+//        try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+//            while (rs.next()) {
+//                Equipo e = new Equipo(
+//                        rs.getInt("id_equipo"),
+//                        rs.getString("nombre"),
+//                        rs.getString("pais"),
+//                        rs.getString("director_tecnico"),
+//                        puntos
+//                );
+//                System.out.println("Cargando equipo: " + rs.getString("nombre"));
+//                equipos.add(e);
+//            }
+//        }
+//
+//    }
+
+    public void listarEquipos() {
+        for (Equipo e : equipos) {
             System.out.println(e);
         }
     }
-    
 
     public void registrarJugador() {
 //        private int dni;
@@ -141,40 +139,42 @@ public class ControladorCodeball {
             arbitros.add(new Arbitro(dni, nombre, apellido, fecha));
         }
     }
+
 //METODO REGISTRAR EQUIPO COMENTADO
-    
-    
-//   public void registrarEquipo() {
-//   private String nombre;
-//    private int cantidadJugadores;
-//        vista.mensaje("Ingrese el nombre.");
-//        String nombre = vista.pedirString();
-//
-//        boolean existencia = false;
-//        for (Equipo e : equipos) {
-//            if (e.getNombre().equalsIgnoreCase(nombre)) {
-//                existencia = true;
-//            }
-//        }
-//        if (existencia) {
-//            vista.mensaje("Ese equipo ya existe.");
-//        } else {
-//            equipos.add(new Equipo(nombre));
-//        }
-//    }
+    public void registrarEquipo() {
+        String nombre;
+
+        vista.mensaje("Ingrese el nombre.");
+        nombre = vista.pedirString();
+
+        boolean existencia = false;
+        for (Equipo e : equipos) {
+            if (e.getNombre().equalsIgnoreCase(nombre)) {
+                existencia = true;
+            }
+        }
+        if (existencia) {
+            vista.mensaje("Ese equipo ya existe.");
+        } else {
+            equipos.add(new Equipo(nombre));
+        }
+    }
 
     public void registrarEquipoTemporada() {
-//    private Date fechaCreacion;
+//    private String fechaCreacion;
 //    private Equipo equipo;
-//    private HashMap<Jugador, Posicion> jugadorPosicion = new HashMap<>();
+//    private ArrayList<Jugador> jugadores = new ArrayList<>();
         vista.mensaje("Inserte a fecha de su creacion.");
         Date fecha = vista.pedirFecha();
+
         vista.mensaje("Seleccione al equipo que representa.");
         int contador = 1;
+
         for (Equipo e : equipos) {
             vista.mensaje(contador + " | " + e.getNombre());
             contador++;
         }
+
         int numeroDeEquipo = vista.pedirInt() - 1;
         ArrayList<Integer> numerosDejugadores = new ArrayList<>();
         vista.mensaje("Seleccione sus jugadores. ");
@@ -193,16 +193,32 @@ public class ControladorCodeball {
                 if (numerosDejugadores.contains(numeroRegistro)) {
                     vista.mensaje("Ese jugador ya esta en el equipo.");
                 } else {
+                    
                     numerosDejugadores.add(numeroRegistro);
                     vista.mensaje("Tus jugadores hasta ahora.");
-                    for(int n: numerosDejugadores){
-                        vista.mensaje(n + " | " + jugadores.get(n-1).getNombre() + " " + jugadores.get(n-1).getApellido() );
+                    for (int n : numerosDejugadores) {
+                        vista.mensaje(n + " | " + jugadores.get(n - 1).getNombre() + " " + jugadores.get(n - 1).getApellido());
                     }
                     
+                    if (numerosDejugadores.size() > 11) {
+                        vista.mensaje("Usted ya tiene 11 jugadores en su equipo ¿Desea seguir agregando más?");
+
+                        if (vista.eleccionSiNo()) {
+                        } else {
+                            numeroRegistro = 0;
+                            equiposTemporada.add(new EquipoTemporada(fecha, equipos.get(numeroDeEquipo)));
+                            ArrayList<Jugador> jugadoresTemporalesMetodo = new ArrayList<>();
+                            for (int n : numerosDejugadores) {
+                                jugadoresTemporalesMetodo.add(jugadores.get(n - 1));
+                            }
+                            equiposTemporada.get(equiposTemporada.size() - 1).setJugadores(jugadoresTemporalesMetodo);
+                        }
+                    }
                 }
             }
         }
-
     }
+    
+    
 
 }

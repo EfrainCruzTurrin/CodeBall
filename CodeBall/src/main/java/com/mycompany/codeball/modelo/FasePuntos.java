@@ -1,15 +1,22 @@
-
 package com.mycompany.codeball.modelo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class FasePuntos extends Fase{
+public class FasePuntos extends Fase {
+
     private HashMap<EquipoTemporada, ArrayList<Integer>> puntosGanados = new HashMap<>();
     private HashMap<EquipoTemporada, Integer> puntosTotalesPorEquipo = new HashMap<>();
+    private ArrayList<Grupo> grupos = new ArrayList<>();
+
+    public FasePuntos(ArrayList<Partido> partidos, HashMap<Jugador, Penalizacion> jugadoresPenalizados, HashMap<EquipoTemporada, ArrayList<Integer>> puntosGanados, HashMap<EquipoTemporada, Integer> puntosTotalesPorEquipo, ArrayList<Grupo> grupos) {
+        super("Puntos", partidos, jugadoresPenalizados);
+        this.puntosGanados = puntosGanados;
+        this.puntosTotalesPorEquipo = puntosTotalesPorEquipo;
+        this.grupos = grupos;
+    }
 
     public FasePuntos() {
-        super("Puntos");
     }
 
     public HashMap<EquipoTemporada, ArrayList<Integer>> getPuntosGanados() {
@@ -20,6 +27,10 @@ public class FasePuntos extends Fase{
         return puntosTotalesPorEquipo;
     }
 
+    public ArrayList<Grupo> getGrupos() {
+        return grupos;
+    }
+
     public void setPuntosGanados(HashMap<EquipoTemporada, ArrayList<Integer>> puntosGanados) {
         this.puntosGanados = puntosGanados;
     }
@@ -28,10 +39,13 @@ public class FasePuntos extends Fase{
         this.puntosTotalesPorEquipo = puntosTotalesPorEquipo;
     }
 
+    public void setGrupos(ArrayList<Grupo> grupos) {
+        this.grupos = grupos;
+    }
+
     @Override
     public String toString() {
-        return "FasePuntos{" + "puntosGanados=" + puntosGanados + ", puntosTotalesPorEquipo=" + puntosTotalesPorEquipo + '}';
+        return "FasePuntos{" + "puntosGanados=" + puntosGanados + ", puntosTotalesPorEquipo=" + puntosTotalesPorEquipo + ", grupos=" + grupos + '}';
     }
-    
-    
+
 }

@@ -12,7 +12,7 @@ public class Vista {
             try {
                 return Integer.parseInt(sc.nextLine());
             } catch (NumberFormatException e) {
-                System.out.print("Entrada inválida. Ingrese un número: ");
+                mensaje("Entrada inválida. Ingrese un número: ");
             }
         }
     }
@@ -22,11 +22,11 @@ public class Vista {
     }
     
     public Date pedirFecha(){
-        System.out.print("Ingrese el año: ");
+        mensaje("Ingrese el año: ");
         String anio = pedirString();
-        System.out.print("Ingrese el mes: ");
+        mensaje("Ingrese el mes: ");
         String mes = pedirString();
-        System.out.print("Ingrese el dia: ");
+        mensaje("Ingrese el dia: ");
         String dia = pedirString();
         Date fecha = Date.valueOf(anio+"-"+mes+"-"+dia);        
         return fecha; 
@@ -36,7 +36,7 @@ public class Vista {
         System.out.println(mensaje);
     }
     
-     public int eleccionSiNo(){ 
+     public boolean eleccionSiNo(){ 
         int dato = 0;
         while(dato != 1 || dato != 2){
             mensaje("1. Si");
@@ -46,11 +46,17 @@ public class Vista {
                 mensaje("Dato no valido.");
             }
         }
-        return dato;
+        boolean datoBool;
+        if (dato == 1){
+            datoBool = true;
+        }else{
+            datoBool = false;
+        } 
+        return datoBool;
     }
      
     public void mostrarMenu(){
-        System.out.println("Elija una opción: " +
+        mensaje("Elija una opción: " +
                 "\n1-Registrar nuevo Jugador: " +
                 "\n2-Registrar nuevo Equipo: " +
                 "\n3-Registrar Árbitro: " +
@@ -65,7 +71,7 @@ public class Vista {
     }
     
     public void mostrarMenuTorneo(){
-        System.out.println("Elija una opción: " +
+        mensaje("Elija una opción: " +
                 "\n1-Mostrar Resultados: " +
                 "\n2-Listar Equipos: " +
                 "\n4-Listar Partidos" +
@@ -74,7 +80,7 @@ public class Vista {
     }
 
     public void mostrarMenuEquipo(){
-        System.out.println("Elija una opción: " +
+        mensaje("Elija una opción: " +
                 "\n1-Mostrar Partidos: " +
                 "\n2-Listar Equipos: " +
                 "\n4-Listar Partidos" +
