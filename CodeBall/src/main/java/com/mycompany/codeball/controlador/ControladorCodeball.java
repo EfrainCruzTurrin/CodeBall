@@ -392,9 +392,7 @@ public class ControladorCodeball {
     }
 
     public void registrarFaseGrupo() {
-    
-
-    ////        public FasePuntos(ArrayList<Partido> partidos, 
+////        public FasePuntos(ArrayList<Partido> partidos, 
 ////        HashMap<Jugador, Penalizacion> jugadoresPenalizados, 
 ////        HashMap<EquipoTemporada, ArrayList<Integer>> puntosGanados,
 ///         HashMap<EquipoTemporada, Integer> puntosTotalesPorEquipo,
@@ -403,20 +401,38 @@ public class ControladorCodeball {
 ////        this.puntosGanados = puntosGanados;
 ////        this.puntosTotalesPorEquipo = puntosTotalesPorEquipo;
 ////        this.grupos = grupos;
+        vista.mensaje("Seleccione sus grupos.");
+        ArrayList<Grupo> gruposTemporales = new ArrayList<>();
+        int contador = 1;
+        for(Grupo g: grupos){
+            vista.mensaje(contador + " | " + g.getEquipos().get(0).getEquipo().getNombre() + " | " + g.getEquipos().get(1).getEquipo().getNombre() + " | " + g.getEquipos().get(2).getEquipo().getNombre() + " | " + g.getEquipos().get(3).getEquipo().getNombre());
+        }
+        while()
         
     };
     
     public ArrayList<Partido> filtrarPartidosPorGrupo(ArrayList<Grupo> gruposPara, ArrayList<Partido> partidosPara) {
+        ArrayList<Partido> partidosTemporales = new ArrayList<>();
         for (Grupo g : gruposPara) {
-
             for (Partido p : partidosPara) {
                 if (g.getEquipos().contains(p.getEquipos())) {
-
+                    partidosTemporales.add(p);
                 }
             }
-
         }
-
+        return partidosTemporales;
+    }
+    
+    public HashMap<Jugador, Penalizacion> JugadoresPenalizados(ArrayList<Partido> partidosTemporales){
+        HashMap<Jugador, Penalizacion> jugadoresPenalizados = new HashMap<>();
+//        for(Partido p : partidosTemporales){
+//            for(Jugador j: p.getFaltas().keySet()){
+//                
+//            }
+//        }
+//        
+        
+        return jugadoresPenalizados;
     }
 
 //Registrar:
@@ -429,6 +445,7 @@ public class ControladorCodeball {
 //    Grupo             [x]
 //    Partido           [x]
 //    Torneo            []
+//    Falta el interior dejugadores Penalizados()    
 //Consultas:
 //    mostrarMenuTorneo(){
 //          "Elija una opción: " +          

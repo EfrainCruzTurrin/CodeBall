@@ -11,9 +11,10 @@ public class FasePuntos extends Fase {
 
     public FasePuntos(ArrayList<Partido> partidos, HashMap<Jugador, Penalizacion> jugadoresPenalizados, HashMap<EquipoTemporada, ArrayList<Integer>> puntosGanados, HashMap<EquipoTemporada, Integer> puntosTotalesPorEquipo, ArrayList<Grupo> grupos) {
         super("Puntos", partidos, jugadoresPenalizados);
+        this.grupos = grupos;
         this.puntosGanados = puntosGanados;
         this.puntosTotalesPorEquipo = puntosTotalesPorEquipo;
-        this.grupos = grupos;
+        
     }
 
     public FasePuntos() {
@@ -43,6 +44,8 @@ public class FasePuntos extends Fase {
         this.grupos = grupos;
     }
 
+    
+    
     @Override
     public String toString() {
         return "FasePuntos{" + "puntosGanados=" + puntosGanados + ", puntosTotalesPorEquipo=" + puntosTotalesPorEquipo + ", grupos=" + grupos + '}';
