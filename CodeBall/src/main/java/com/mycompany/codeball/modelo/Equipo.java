@@ -3,7 +3,7 @@ package com.mycompany.codeball.modelo;
 public class Equipo {
 
     // idEquipo no era necesario
-//    private int id;
+  private int idEquipo;
     private String nombre;
 //    private String pais;
 //    private String entrenador;
@@ -17,7 +17,8 @@ public class Equipo {
 ////        this.puntos = puntos;
 //    }
 
-    public Equipo(String nombre) {
+    public Equipo(int id,String nombre) {
+        this.idEquipo = idEquipo;
         this.nombre = nombre;
     }
 
@@ -28,9 +29,18 @@ public class Equipo {
 //        return id;
 //    }
 
+    public int getIdEquipo() {
+        return idEquipo;
+    }
+
     public String getNombre() {
         return nombre;
     }
+
+    public void setIdEquipo(int idEquipo) {  
+        this.idEquipo = idEquipo;
+    }
+
 //
 //    public String getPais() {
 //        return pais;
@@ -47,7 +57,6 @@ public class Equipo {
 //    public void setId(int id) {
 //        this.id = id;
 //    }
-
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
@@ -63,12 +72,10 @@ public class Equipo {
 //    public void setPuntos(int puntos) {
 //        this.puntos = puntos;
 //    }
-
 //    @Override
 //    public String toString() {
 //        return "Equipo{" + "id=" + id + ", nombre=" + nombre + ", pais=" + pais + ", entrenador=" + entrenador + ", puntos=" + puntos + '}';
 //    }
-
     @Override
     public String toString() {
         return "Equipo{" + "nombre=" + nombre + '}';

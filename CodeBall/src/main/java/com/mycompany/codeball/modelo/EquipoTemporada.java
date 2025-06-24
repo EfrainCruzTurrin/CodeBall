@@ -5,21 +5,18 @@ import java.util.ArrayList;
 
 public class EquipoTemporada {
 
-    private Date fechaCreacion;
+
     private Equipo equipo;
     private ArrayList<Jugador> jugadores = new ArrayList<>();
 
-    public EquipoTemporada(Date fechaCreacion, Equipo equipo) {
-        this.fechaCreacion = fechaCreacion;
+    public EquipoTemporada(Equipo equipo) {
+
         this.equipo = equipo;
     }
 
     public EquipoTemporada() {
     }
 
-    public Date getFechaCreacion() {
-        return fechaCreacion;
-    }
 
     public Equipo getEquipo() {
         return equipo;
@@ -29,9 +26,7 @@ public class EquipoTemporada {
         return jugadores;
     }
 
-    public void setFechaCreacion(Date fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
-    }
+
 
     public void setEquipo(Equipo equipo) {
         this.equipo = equipo;
@@ -41,9 +36,13 @@ public class EquipoTemporada {
         this.jugadores = jugadores;
     }
 
+       public void agregarJugador(Jugador jugador) {
+        jugadores.add(jugador);
+    }
+       
     @Override
     public String toString() {
-        return "EquipoTemporada{" + "fechaCreacion=" + fechaCreacion + ", equipo=" + equipo + ", jugadorPosicion=" + jugadores + '}';
+        return "EquipoTemporada{" +  ", equipo=" + equipo + ", jugadorPosicion=" + jugadores + '}';
     }
 
 }

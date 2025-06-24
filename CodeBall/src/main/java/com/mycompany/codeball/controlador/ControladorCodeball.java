@@ -25,7 +25,9 @@ import java.util.ArrayList;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -61,28 +63,92 @@ public class ControladorCodeball {
         }
     }
 
-//    public void cargarEquipos() throws SQLException {
-//        String sql = "SELECT id_equipo, nombre, pais, director_tecnico FROM equipo";
-//        int puntos = 0;
-//        try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
-//            while (rs.next()) {
-//                Equipo e = new Equipo(
-//                        rs.getInt("id_equipo"),
-//                        rs.getString("nombre"),
-//                        rs.getString("pais"),
-//                        rs.getString("director_tecnico"),
-//                        puntos
-//                );
-//                System.out.println("Cargando equipo: " + rs.getString("nombre"));
-//                equipos.add(e);
-//            }
-//        }
-//
-//    }
+    public void iniciarSistema() throws SQLException {
+        equipos = cargarEquipos();
+        jugadores = cargarJugadores();
+        equiposTemporada = asignarJugadoresAEquipos(equipos, jugadores);
+    }
+
+    public ArrayList<Equipo> cargarEquipos() throws SQLException {
+        String sql = "SELECT id_equipo, nombre FROM equipo";
+        try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Equipo e = new Equipo();
+                     e.setIdEquipo(rs.getInt("id_equipo"));
+                    e.setNombre(rs.getString("nombre"));
+           
+                System.out.println("Cargando equipo: " + rs.getString("nombre"));
+                equipos.add(e);
+            }
+            System.out.println("Equipos cargados:");
+            for (Equipo e : equipos) {
+                System.out.println(" - ID: " + e.getIdEquipo() + ", Nombre: " + e.getNombre());
+            }
+        }
+        return equipos;
+
+    }
+
+    public ArrayList<Jugador> cargarJugadores() throws SQLException {
+        String sql = "SELECT * FROM jugador";
+        try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Jugador j = new Jugador(
+                        rs.getInt("id_jugador"),
+                        rs.getString("nombre"),
+                        rs.getString("apellido"),
+                        rs.getString("dni"),
+                        rs.getDate("fecha_nacimiento"),
+                        rs.getInt("id_posicion"),
+                        rs.getInt("id_equipo")
+                );
+                System.out.println("Cargando jugador: " + rs.getString("nombre"));
+                jugadores.add(j);
+            }
+        }
+        return jugadores;
+    }
+
+    public ArrayList<EquipoTemporada> asignarJugadoresAEquipos(ArrayList<Equipo> equipos, ArrayList<Jugador> jugadores) {
+
+        Map<Integer, Equipo> mapaEquipos = new HashMap<>();
+        for (Equipo e : equipos) {
+            mapaEquipos.put(e.getIdEquipo(), e);
+        }
+        Map<Integer, EquipoTemporada> mapaTemporadas = new HashMap<>();
+
+        for (Jugador jugador : jugadores) {
+            int idEq = jugador.getIdEquipo();
+
+            if (mapaEquipos.containsKey(idEq)) {
+                if (!mapaTemporadas.containsKey(idEq)) {
+                    Equipo equipo = mapaEquipos.get(idEq);
+                    EquipoTemporada et = new EquipoTemporada(equipo);
+                    mapaTemporadas.put(idEq, et);
+                }
+                mapaTemporadas.get(idEq).agregarJugador(jugador);
+            } else {
+                System.out.println("Jugador " + jugador.getNombre() + " tiene un idEquipo inválido: " + idEq);
+            }
+        }
+
+        return new ArrayList<>(mapaTemporadas.values());
+    }
 
     public void listarEquipos() {
         for (Equipo e : equipos) {
             System.out.println(e);
+        }
+    }
+
+    public void mostrarInformeEquipos() {
+        for (EquipoTemporada et : equiposTemporada) {
+            System.out.println("Equipo: " + et.getEquipo().getNombre());
+            System.out.println("Jugadores:");
+            for (Jugador j : et.getJugadores()) {
+                System.out.println(" - " + j.getNombre() + " " + j.getApellido());
+            }
+            System.out.println("---------------------------");
         }
     }
 
@@ -91,14 +157,27 @@ public class ControladorCodeball {
 //        private String nombre;
 //        private String apellido;
 //        private Date fechaNacimiento;
-        vista.mensaje("Ingrsese el DNI o numero de identificación similar.");
-        int dni = vista.pedirInt();
+        vista.mensaje("Ingrese la ID del jugador");
+        int idJugador = vista.pedirInt();
+
         vista.mensaje("Ingrese el nombre.");
         String nombre = vista.pedirString();
+
         vista.mensaje("Ingrese el apellido.");
         String apellido = vista.pedirString();
-        vista.mensaje("Ingrese la fecha de nacimiento.");
+
+        vista.mensaje("Ingrese el DNI o numero de identificación similar.");
+        String dni = vista.pedirString();
+
+        vista.mensaje("Ingrese Fecha de nacimiento.");
         Date fecha = vista.pedirFecha();
+
+        vista.mensaje("Ingrese la ID de la posicion:");
+        vista.mensaje("1: Arquero \n 2: Defensor \n 3: Mediocampista \n 4: Delantero");
+        int idPosicion = vista.pedirInt();
+
+        vista.mensaje("Ingrese la id del equipo");
+        int idEquipo = vista.pedirInt();
 
         boolean existencia = false;
         for (Jugador j : jugadores) {
@@ -109,7 +188,7 @@ public class ControladorCodeball {
         if (existencia) {
             vista.mensaje("Ese codigo de identificacion ya existe.");
         } else {
-            jugadores.add(new Jugador(dni, nombre, apellido, fecha));
+            jugadores.add(new Jugador(idJugador, nombre, apellido, dni, fecha, idPosicion, idEquipo));
         }
     }
 
@@ -143,7 +222,10 @@ public class ControladorCodeball {
 //METODO REGISTRAR EQUIPO COMENTADO
     public void registrarEquipo() {
         String nombre;
+        int idEquipo;
 
+        vista.mensaje("Ingrese la id del equipo");
+        idEquipo = vista.pedirInt();
         vista.mensaje("Ingrese el nombre.");
         nombre = vista.pedirString();
 
@@ -156,7 +238,7 @@ public class ControladorCodeball {
         if (existencia) {
             vista.mensaje("Ese equipo ya existe.");
         } else {
-            equipos.add(new Equipo(nombre));
+            equipos.add(new Equipo(idEquipo, nombre));
         }
     }
 
@@ -164,8 +246,6 @@ public class ControladorCodeball {
 //    private String fechaCreacion;
 //    private Equipo equipo;
 //    private ArrayList<Jugador> jugadores = new ArrayList<>();
-        vista.mensaje("Inserte a fecha de su creacion.");
-        Date fecha = vista.pedirFecha();
 
         vista.mensaje("Seleccione al equipo que representa.");
         int contador = 1;
@@ -193,20 +273,20 @@ public class ControladorCodeball {
                 if (numerosDejugadores.contains(numeroRegistro)) {
                     vista.mensaje("Ese jugador ya esta en el equipo.");
                 } else {
-                    
+
                     numerosDejugadores.add(numeroRegistro);
                     vista.mensaje("Tus jugadores hasta ahora.");
                     for (int n : numerosDejugadores) {
                         vista.mensaje(n + " | " + jugadores.get(n - 1).getNombre() + " " + jugadores.get(n - 1).getApellido());
                     }
-                    
+
                     if (numerosDejugadores.size() > 11) {
                         vista.mensaje("Usted ya tiene 11 jugadores en su equipo ¿Desea seguir agregando más?");
 
                         if (vista.eleccionSiNo()) {
                         } else {
                             numeroRegistro = 0;
-                            equiposTemporada.add(new EquipoTemporada(fecha, equipos.get(numeroDeEquipo)));
+                            equiposTemporada.add(new EquipoTemporada(equipos.get(numeroDeEquipo)));
                             ArrayList<Jugador> jugadoresTemporalesMetodo = new ArrayList<>();
                             for (int n : numerosDejugadores) {
                                 jugadoresTemporalesMetodo.add(jugadores.get(n - 1));
@@ -218,7 +298,5 @@ public class ControladorCodeball {
             }
         }
     }
-    
-    
 
 }
