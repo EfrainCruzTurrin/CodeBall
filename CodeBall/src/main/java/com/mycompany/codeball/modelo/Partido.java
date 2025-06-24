@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.sql.Date;
 import java.util.HashMap;
 
-
 public class Partido {
+
     private Date fecha;
     private ArrayList<EquipoTemporada> equipos = new ArrayList<>();
     private HashMap<Jugador, ArrayList<TipoFalta>> faltas = new HashMap<>();
@@ -14,10 +14,14 @@ public class Partido {
     private EquipoTemporada ganador;
     private EquipoTemporada perdedor;
 
-    public Partido(Date fecha, EquipoTemporada ganador, EquipoTemporada perdedor) {
+    public Partido(Date fecha, ArrayList<EquipoTemporada> equipos, HashMap<Jugador, ArrayList<TipoFalta>> faltas, HashMap<EquipoTemporada, ArrayList<Jugador>> goles, HashMap<EquipoTemporada, ArrayList<Jugador>> penalesDescisivos) {
         this.fecha = fecha;
-        this.ganador = ganador;
-        this.perdedor = perdedor;
+        this.equipos = equipos;
+        this.faltas = faltas;
+        this.goles = goles;
+        this.penalesDescisivos = penalesDescisivos;
+        this.ganador = determinarGanador();
+        this.perdedor = determinarPerdedor();
     }
 
     public Partido() {
@@ -79,11 +83,63 @@ public class Partido {
         this.perdedor = perdedor;
     }
 
+    public EquipoTemporada determinarGanador() {
+        int numeroGoles1 = 0;
+        int numeroGoles2 = 0;
+        EquipoTemporada equipo1 = equipos.get(0);
+        EquipoTemporada equipo2 = equipos.get(0);
+        int contador = 1;
+        for (EquipoTemporada e : goles.keySet()) {
+            if (contador == 1) {
+                numeroGoles1 = goles.get(e).size();
+                equipo1 = e;
+                contador++;
+            } else {
+                numeroGoles2 = goles.get(e).size();
+                equipo2 = e;
+            }
+        }
+        if (numeroGoles1 == numeroGoles2) {
+            contador = 1;
+            for (EquipoTemporada e : penalesDescisivos.keySet()) {
+                if (contador == 1) {
+                    numeroGoles1 = penalesDescisivos.get(e).size();
+                    equipo1 = e;
+                    contador++;
+                } else {
+                    numeroGoles2 = penalesDescisivos.get(e).size();
+                    equipo2 = e;
+                }
+            }
+
+            if (numeroGoles1 > numeroGoles2) {
+                return equipo1;
+            } else {
+                return equipo2;
+            }
+
+        } else if (numeroGoles1 > numeroGoles2) {
+            return equipo1;
+        } else {
+            return equipo2;
+        }
+
+    }
+    
+    public EquipoTemporada determinarPerdedor(){
+        EquipoTemporada perdedorUnico = equipos.get(0);
+        for(EquipoTemporada e: equipos){
+            if(ganador.equals(e)){
+            }else{
+                perdedorUnico = e;
+            }
+        }
+        return perdedorUnico;
+    }
+
     @Override
     public String toString() {
         return "Partido{" + "fecha=" + fecha + ", equipos=" + equipos + ", faltas=" + faltas + ", goles=" + goles + ", penalesDescisivos=" + penalesDescisivos + ", ganador=" + ganador + ", perdedor=" + perdedor + '}';
     }
-    
-    
-    
+
 }

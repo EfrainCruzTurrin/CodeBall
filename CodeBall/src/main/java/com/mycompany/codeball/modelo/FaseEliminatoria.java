@@ -7,6 +7,7 @@ public class FaseEliminatoria extends Fase {
 
     private ArrayList<EquipoTemporada> equiposIniciales = new ArrayList<>();
     private HashMap<EquipoTemporada, FaseDeEliminatoria> equiposEliminados = new HashMap<>();
+    
 
     public FaseEliminatoria(ArrayList<Partido> partidos, HashMap<Jugador, Penalizacion> jugadoresPenalizados, ArrayList<EquipoTemporada> equiposIniciales, HashMap<EquipoTemporada, FaseDeEliminatoria> equiposEliminados) {
         super("Eliminatoria", partidos, jugadoresPenalizados);

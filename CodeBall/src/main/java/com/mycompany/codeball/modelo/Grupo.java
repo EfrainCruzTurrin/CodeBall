@@ -6,7 +6,8 @@ public class Grupo {
 //    private int id;
     private ArrayList<EquipoTemporada> equipos = new ArrayList<>();
 
-    public Grupo() {
+    public Grupo(ArrayList<EquipoTemporada> equipos) {
+        this.equipos = equipos;
     }
 
     

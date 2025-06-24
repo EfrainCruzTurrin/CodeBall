@@ -3,7 +3,7 @@ package com.mycompany.codeball.vista;
 import java.util.Scanner;
 import java.sql.Date;
 
-
+  
 public class Vista {
     private Scanner sc = new Scanner (System.in);  
     
@@ -66,7 +66,7 @@ public class Vista {
                 "\n7-Seleccionar Torneo: " +
                 "\n8-Lista de Jugadores: " +
                 "\n9-Lista de Equipos: " +
-                "\n10-Lista de Equipos: " +
+                "\n10-Lista de Equipos por tiempo: " +
                 "\n0-Salir");
     }
     
@@ -76,6 +76,7 @@ public class Vista {
                 "\n2-Listar Equipos: " +
                 "\n4-Listar Partidos" +
                 "\n4-Resultado de Fase de Puntos" +
+                "\n5-Resultado de Eliminatorias" +
                 "\n0-Salir");
     }
 
