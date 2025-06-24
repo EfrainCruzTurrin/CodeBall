@@ -3,13 +3,17 @@ package com.mycompany.codeball.modelo;
 import java.util.ArrayList;
 
 public class Torneo {
-    private String descripcion;
-    private ArrayList<Equipo> equipos = new ArrayList<>();
-    private Fase fase;
 
-    public Torneo(String descripcion, Equipo equipo, Fase fase) {
+    private String descripcion;
+    private ArrayList<EquipoTemporada> equipos = new ArrayList<>();
+    private FasePuntos fasePuntos;
+    private FaseEliminatoria faseEliminatoria;
+
+    public Torneo(String descripcion, ArrayList<EquipoTemporada> equipos, FasePuntos fasePuntos, FaseEliminatoria faseEliminatoria) {
         this.descripcion = descripcion;
-        this.fase = fase;
+        this.equipos = equipos;
+        this.fasePuntos = fasePuntos;
+        this.faseEliminatoria = faseEliminatoria;
     }
 
     public Torneo() {
@@ -19,22 +23,32 @@ public class Torneo {
         return descripcion;
     }
 
-    public Fase getFase() {
-        return fase;
+    public ArrayList<EquipoTemporada> getEquipos() {
+        return equipos;
+    }
+
+    public FasePuntos getFasePuntos() {
+        return fasePuntos;
+    }
+
+    public FaseEliminatoria getFaseEliminatoria() {
+        return faseEliminatoria;
     }
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
 
-    public void setFase(Fase fase) {
-        this.fase = fase;
+    public void setEquipos(ArrayList<EquipoTemporada> equipos) {
+        this.equipos = equipos;
     }
 
-    @Override
-    public String toString() {
-        return "Torneo{" + "descripcion=" + descripcion + ", fase=" + fase + '}';
+    public void setFasePuntos(FasePuntos fasePuntos) {
+        this.fasePuntos = fasePuntos;
     }
-    
-    
+
+    public void setFaseEliminatoria(FaseEliminatoria faseEliminatoria) {
+        this.faseEliminatoria = faseEliminatoria;
+    }
+
 }
