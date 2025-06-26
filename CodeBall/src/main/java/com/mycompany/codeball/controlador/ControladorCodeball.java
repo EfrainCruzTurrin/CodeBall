@@ -27,6 +27,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -64,6 +65,8 @@ public class ControladorCodeball {
         }
     }
 
+    // ----------------- CARGAR EQUIPOS DESDE DB ------------------------------- //
+    
 //    public void cargarEquipos() throws SQLException {
 //        String sql = "SELECT id_equipo, nombre, pais, director_tecnico FROM equipo";
 //        int puntos = 0;
@@ -82,6 +85,35 @@ public class ControladorCodeball {
 //        }
 //
 //    }
+    
+    // ------------------------------- ASIGNAR JUGADORES A EQUIPOS DESDE DB --------------------------------------
+    
+//     public ArrayList<EquipoTemporada> asignarJugadoresAEquipos(ArrayList<Equipo> equipos, ArrayList<Jugador> jugadores) {
+//
+//        Map<Integer, Equipo> mapaEquipos = new HashMap<>();
+//        for (Equipo e : equipos) {
+//            mapaEquipos.put(e.getIdEquipo(), e);
+//        }
+//        Map<Integer, EquipoTemporada> mapaTemporadas = new HashMap<>();
+//
+//        for (Jugador jugador : jugadores) {
+//            int idEq = jugador.getIdEquipo();
+//
+//            if (mapaEquipos.containsKey(idEq)) {
+//                if (!mapaTemporadas.containsKey(idEq)) {
+//                    Equipo equipo = mapaEquipos.get(idEq);
+//                    EquipoTemporada et = new EquipoTemporada(equipo);
+//                    mapaTemporadas.put(idEq, et);
+//                }
+//                mapaTemporadas.get(idEq).agregarJugador(jugador);
+//            } else {
+//                System.out.println("Jugador " + jugador.getNombre() + " tiene un idEquipo inválido: " + idEq);
+//            }
+//        }
+//
+//        return new ArrayList<>(mapaTemporadas.values());
+//    }
+    
     public void listarEquipos() {
         for (Equipo e : equipos) {
             System.out.println(e);
