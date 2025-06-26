@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,7 +67,6 @@ public class ControladorCodeball {
     }
 
     // ----------------- CARGAR EQUIPOS DESDE DB ------------------------------- //
-    
 //    public void cargarEquipos() throws SQLException {
 //        String sql = "SELECT id_equipo, nombre, pais, director_tecnico FROM equipo";
 //        int puntos = 0;
@@ -85,9 +85,7 @@ public class ControladorCodeball {
 //        }
 //
 //    }
-    
 // --------------------------- CARGAR JUGADORES DESDE DB ----------------------------------------
-    
 //    public ArrayList<Jugador> cargarJugadores() throws SQLException {
 //        String sql = "SELECT * FROM jugador";
 //        try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
@@ -106,10 +104,7 @@ public class ControladorCodeball {
 //        }
 //        return jugadores;
 //    }
-    
-    
     // ------------------------------- ASIGNAR JUGADORES A EQUIPOS DESDE DB --------------------------------------
-    
 //     public ArrayList<EquipoTemporada> asignarJugadoresAEquipos(ArrayList<Equipo> equipos, ArrayList<Jugador> jugadores) {
 //
 //        Map<Integer, Equipo> mapaEquipos = new HashMap<>();
@@ -135,7 +130,6 @@ public class ControladorCodeball {
 //
 //        return new ArrayList<>(mapaTemporadas.values());
 //    }
-    
     public void listarEquipos() {
         for (Equipo e : equipos) {
             System.out.println(e);
@@ -165,7 +159,29 @@ public class ControladorCodeball {
         if (existencia) {
             vista.mensaje("Ese codigo de identificacion ya existe.");
         } else {
-            jugadores.add(new Jugador(dni, nombre, apellido, fecha));
+            String sql = "INSERT INTO jugador (dni, nombre, apellido, fecha_nacimiento) VALUES (?, ?, ?, ?)";
+            try (PreparedStatement stmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                stmt.setInt(1, dni);
+                stmt.setString(2, nombre);
+                stmt.setString(3, apellido);
+                stmt.setDate(4, new java.sql.Date(fecha.getTime()));
+
+                int filasInsertadas = stmt.executeUpdate();
+
+                if (filasInsertadas > 0) {
+                    try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                        if (generatedKeys.next()) {
+                            int idJugadorGenerada = generatedKeys.getInt(1);
+                            Jugador nuevoJugador = new Jugador(idJugadorGenerada, dni, nombre, apellido, fecha);
+                            jugadores.add(nuevoJugador);
+                            vista.mensaje("Jugador registrado exitosamente con ID: " + idJugadorGenerada);
+                        }
+                    }
+                }
+            } catch (SQLException e) {
+                vista.mensaje("Error al insertar el jugador: " + e.getMessage());
+            }
+
         }
     }
 
@@ -275,7 +291,7 @@ public class ControladorCodeball {
         }
     }
 
-    public void registrarPartido() {
+    public void registrarPartido() throws SQLException {
 //      private Date fecha;
 //      private ArrayList<EquipoTemporada> equipos = new ArrayList<>();
 //      private HashMap<Jugador, ArrayList<TipoFalta>> faltas = new HashMap<>();
@@ -397,7 +413,75 @@ public class ControladorCodeball {
         }
 
         partidos.add(new Partido(fecha, equiposTemporales, faltas, golesTemporales, penalesTemporales));
-    }
+
+        // ---------------- INSERTAR PARTIDO EN BD ---------------------------     
+//        String sqlPartido = "INSERT INTO partido (id_fase, id_equipo_temporada_local, id_equipo_temporada_visitante, goles_local, goles_visitante) VALUES (?, ?, ?, ?, ?)";
+//        int idPartidoGenerado = 0;
+//
+//        try (PreparedStatement stmt = con.prepareStatement(sqlPartido, Statement.RETURN_GENERATED_KEYS)) {
+//            
+//            stmt.setInt(1, idFase); 
+//            stmt.setInt(2, equipoLocalId); 
+//            stmt.setInt(3, equipoVisitanteId); 
+//            stmt.setInt(4, golesLocal); 
+//            stmt.setInt(5, golesVisitante); 
+//
+//            int filasInsertadas = stmt.executeUpdate();
+//
+//            if (filasInsertadas > 0) {
+
+                // -------------- INSERTAR FALTAS -----------------------       
+                for (Map.Entry<Jugador, ArrayList<TipoFalta>> entry : faltas.entrySet()) {
+                    Jugador jugador = entry.getKey();
+                    for (TipoFalta tipoFalta : entry.getValue()) {
+                        String sqlFalta = "INSERT INTO falta (id_partido, id_jugador, tipo_falta) VALUES (?, ?, ?)";
+                        try (PreparedStatement stmtFalta = con.prepareStatement(sqlFalta)) {
+                            stmtFalta.setInt(1, idPartidoGenerado); // id_partido
+                            stmtFalta.setInt(2, jugador.getId());  // id_jugador
+                            stmtFalta.setString(3, tipoFalta.toString()); // tipo_falta
+                            stmtFalta.executeUpdate();
+                        } catch (SQLException e) {
+                            vista.mensaje("Error al insertar falta: " + e.getMessage());
+                        }
+                    }
+                }
+                // ----------------- GOLES --------------------
+                for (Map.Entry<EquipoTemporada, ArrayList<Jugador>> entry : golesTemporales.entrySet()) {
+                    EquipoTemporada equipo = entry.getKey();
+                    for (Jugador jugador : entry.getValue()) {
+                        String sqlGol = "INSERT INTO gol (id_partido, id_jugador, equipo) VALUES (?, ?, ?)";
+                        try (PreparedStatement stmtGol = con.prepareStatement(sqlGol)) {
+                            stmtGol.setInt(1, idPartidoGenerado);  // id_partido
+                            stmtGol.setInt(2, jugador.getId());   // id_jugador
+                            stmtGol.setString(3, equipo.getEquipo().getNombre()); // nombre del equipo
+                            stmtGol.executeUpdate();
+                        } catch (SQLException e) {
+                            vista.mensaje("Error al insertar gol: " + e.getMessage());
+                        }
+                    }
+                }
+                // -------------------- PENALES --------------------- 
+                if (penalesTemporales.size() > 0) {
+                    for (Map.Entry<EquipoTemporada, ArrayList<Jugador>> entry : penalesTemporales.entrySet()) {
+                        EquipoTemporada equipo = entry.getKey();
+                        for (Jugador jugador : entry.getValue()) {
+                            String sqlPenal = "INSERT INTO penal (id_partido, id_jugador, equipo) VALUES (?, ?, ?)";
+                            try (PreparedStatement stmtPenal = con.prepareStatement(sqlPenal)) {
+                                stmtPenal.setInt(1, idPartidoGenerado); // id_partido
+                                stmtPenal.setInt(2, jugador.getId());  // id_jugador
+                                stmtPenal.setString(3, equipo.getEquipo().getNombre()); // nombre del equipo
+                                stmtPenal.executeUpdate();
+                            } catch (SQLException e) {
+                                vista.mensaje("Error al insertar penal: " + e.getMessage());
+                            }
+                        }
+                    }
+                }
+            }
+
+    
+
+    
 
     public ArrayList<TipoFalta> registrarFaltas() {
         vista.mensaje("Que faltas cometio?");
@@ -446,7 +530,7 @@ public class ControladorCodeball {
     }
 
     public void registrarFaseGrupo() {
-////        public FasePuntos(ArrayList<Partido> partidos, 
+        ////        public FasePuntos(ArrayList<Partido> partidos, 
 ////        HashMap<Jugador, Penalizacion> jugadoresPenalizados, 
 ////        HashMap<EquipoTemporada, ArrayList<Integer>> puntosGanados,
 ///         HashMap<EquipoTemporada, Integer> puntosTotalesPorEquipo,
@@ -459,26 +543,25 @@ public class ControladorCodeball {
         for (Grupo g : grupos) {
             vista.mensaje(contador + " | " + g.getEquipos().get(0).getEquipo().getNombre() + " | " + g.getEquipos().get(1).getEquipo().getNombre() + " | " + g.getEquipos().get(2).getEquipo().getNombre() + " | " + g.getEquipos().get(3).getEquipo().getNombre());
         }
-        
+
         ArrayList<Integer> numerosDeGrupos = new ArrayList<>();
         int numero;
-        while(numerosDeGrupos.size() < 8){
+        while (numerosDeGrupos.size() < 8) {
             numero = vista.pedirInt() - 1;
-                
-            if(numerosDeGrupos.contains(numero) || numero < 0 || numero > (equiposTemporada.size() - 1)){
+
+            if (numerosDeGrupos.contains(numero) || numero < 0 || numero > (equiposTemporada.size() - 1)) {
                 vista.mensaje("Dato fuera de rango o seleccion repetida.");
-            }else{
+            } else {
                 numerosDeGrupos.add(numero);
             }
         }
-        
-        for(int n: numerosDeGrupos){
+
+        for (int n : numerosDeGrupos) {
             gruposTemporales.add(grupos.get(n));
         }
-        
-        fasesPuntos.add(new FasePuntos(filtrarPartidosPorGrupo(gruposTemporales,partidos), jugadoresPenalizados(filtrarPartidosPorGrupo(gruposTemporales,partidos)), gruposTemporales));
-        
-        
+
+        fasesPuntos.add(new FasePuntos(filtrarPartidosPorGrupo(gruposTemporales, partidos), jugadoresPenalizados(filtrarPartidosPorGrupo(gruposTemporales, partidos)), gruposTemporales));
+
     }
 
     public ArrayList<Partido> filtrarPartidosPorGrupo(ArrayList<Grupo> gruposPara, ArrayList<Partido> partidosPara) {
