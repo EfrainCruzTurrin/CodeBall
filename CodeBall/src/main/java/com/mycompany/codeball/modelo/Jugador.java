@@ -4,7 +4,7 @@ import java.sql.Date;
 
 public class Jugador {
 
-    private int idJugador;
+
     private String nombre;
     private String apellido;
     private String dni;
@@ -12,8 +12,8 @@ public class Jugador {
     private int idPosicion;
     private int idEquipo;
 
-    public Jugador(int idJugador, String nombre, String apellido, String dni, Date fechaNacimiento, int idPosicion, int idEquipo) {
-        this.idJugador = idJugador;
+    public Jugador(String nombre, String apellido, String dni, Date fechaNacimiento, int idPosicion, int idEquipo) {
+
         this.nombre = nombre;
         this.apellido = apellido;
         this.dni = dni;
@@ -23,10 +23,6 @@ public class Jugador {
     }
 
     public Jugador() {
-    }
-
-    public int getIdJugador() {
-        return idJugador;
     }
 
     public String getNombre() {
@@ -53,9 +49,6 @@ public class Jugador {
         return idEquipo;
     }
 
-    public void setIdJugador(int idJugador) {
-        this.idJugador = idJugador;
-    }
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
@@ -84,7 +77,7 @@ public class Jugador {
 
     @Override
     public String toString() {
-        return "Jugador{" + "idJugador=" + idJugador + ", nombre=" + nombre + ", apellido=" + apellido + ", dni=" + dni + ", fechaNacimiento=" + fechaNacimiento + ", idPosicion=" + idPosicion + ", idEquipo=" + idEquipo + '}';
+        return "Jugador{ nombre=" + nombre + ", apellido=" + apellido + ", dni=" + dni + ", fechaNacimiento=" + fechaNacimiento + ", idPosicion=" + idPosicion + ", idEquipo=" + idEquipo + '}';
     }
 
 }

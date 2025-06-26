@@ -74,9 +74,9 @@ public class ControladorCodeball {
         try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Equipo e = new Equipo();
-                     e.setIdEquipo(rs.getInt("id_equipo"));
-                    e.setNombre(rs.getString("nombre"));
-           
+                e.setIdEquipo(rs.getInt("id_equipo"));
+                e.setNombre(rs.getString("nombre"));
+
                 System.out.println("Cargando equipo: " + rs.getString("nombre"));
                 equipos.add(e);
             }
@@ -94,7 +94,6 @@ public class ControladorCodeball {
         try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Jugador j = new Jugador(
-                        rs.getInt("id_jugador"),
                         rs.getString("nombre"),
                         rs.getString("apellido"),
                         rs.getString("dni"),
@@ -157,8 +156,8 @@ public class ControladorCodeball {
 //        private String nombre;
 //        private String apellido;
 //        private Date fechaNacimiento;
-        vista.mensaje("Ingrese la ID del jugador");
-        int idJugador = vista.pedirInt();
+//        vista.mensaje("Ingrese la ID del jugador");
+//        int idJugador = vista.pedirInt();
 
         vista.mensaje("Ingrese el nombre.");
         String nombre = vista.pedirString();
@@ -188,8 +187,31 @@ public class ControladorCodeball {
         if (existencia) {
             vista.mensaje("Ese codigo de identificacion ya existe.");
         } else {
-            jugadores.add(new Jugador(idJugador, nombre, apellido, dni, fecha, idPosicion, idEquipo));
+            jugadores.add(new Jugador(nombre, apellido, dni, fecha, idPosicion, idEquipo));
         }
+        
+        // INSERTAMOS JUGADOR EN LA BD
+        
+        String sql = "INSERT INTO jugador (nombre, apellido, dni, fecha_nacimiento, id_posicion, id_equipo) "
+                + "VALUES (?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setString(1, nombre);
+            stmt.setString(2, apellido);
+            stmt.setString(3, dni);
+            stmt.setDate(4, new java.sql.Date(fecha.getTime()));
+            stmt.setInt(5, idPosicion);
+            stmt.setInt(6, idEquipo);
+
+            int filasInsertadas = stmt.executeUpdate();
+            if (filasInsertadas > 0) {
+                vista.mensaje("Jugador registrado exitosamente.");
+            } else {
+                vista.mensaje("Hubo un problema al registrar el jugador.");
+            }
+        } catch (SQLException e) {
+            vista.mensaje("Error al insertar en la base de datos: " + e.getMessage());
+        }
+
     }
 
     public void registrarArbitro() {
@@ -238,7 +260,28 @@ public class ControladorCodeball {
         if (existencia) {
             vista.mensaje("Ese equipo ya existe.");
         } else {
-            equipos.add(new Equipo(idEquipo, nombre));
+            // INSERTAR EQUIPOS EN LA BD
+            
+            String sql = "INSERT INTO equipo (nombre) VALUES (?)";
+
+        try (PreparedStatement stmt = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(1, nombre);
+            int filasInsertadas = stmt.executeUpdate();
+
+            if (filasInsertadas > 0) {
+                try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        int idEquipoGenerada = generatedKeys.getInt(1);  
+                        vista.mensaje("Equipo registrado exitosamente con ID: " + idEquipoGenerada);
+                        equipos.add(new Equipo(idEquipoGenerada, nombre)); 
+                    }
+                }
+            } else {
+                vista.mensaje("Hubo un problema al registrar el equipo.");
+            }
+        } catch (SQLException e) {
+            vista.mensaje("Error al insertar en la base de datos: " + e.getMessage());
+        }
         }
     }
 
