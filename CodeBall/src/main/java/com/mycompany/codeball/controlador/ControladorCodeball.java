@@ -399,18 +399,34 @@ public class ControladorCodeball {
 ///         ArrayList<Grupo> grupos) 
 ////        super("Puntos", partidos, jugadoresPenalizados);
 ////        this.puntosGanados = puntosGanados;
-////        this.puntosTotalesPorEquipo = puntosTotalesPorEquipo;
-////        this.grupos = grupos;
         vista.mensaje("Seleccione sus grupos.");
         ArrayList<Grupo> gruposTemporales = new ArrayList<>();
         int contador = 1;
-        for(Grupo g: grupos){
+        for (Grupo g : grupos) {
             vista.mensaje(contador + " | " + g.getEquipos().get(0).getEquipo().getNombre() + " | " + g.getEquipos().get(1).getEquipo().getNombre() + " | " + g.getEquipos().get(2).getEquipo().getNombre() + " | " + g.getEquipos().get(3).getEquipo().getNombre());
         }
-        while()
         
-    };
-    
+        ArrayList<Integer> numerosDeGrupos = new ArrayList<>();
+        int numero;
+        while(numerosDeGrupos.size() < 8){
+            numero = vista.pedirInt() - 1;
+                
+            if(numerosDeGrupos.contains(numero) || numero < 0 || numero > (equiposTemporada.size() - 1)){
+                vista.mensaje("Dato fuera de rango o seleccion repetida.");
+            }else{
+                numerosDeGrupos.add(numero);
+            }
+        }
+        
+        for(int n: numerosDeGrupos){
+            gruposTemporales.add(grupos.get(n));
+        }
+        
+        fasesPuntos.add(new FasePuntos(filtrarPartidosPorGrupo(gruposTemporales,partidos), jugadoresPenalizados(filtrarPartidosPorGrupo(gruposTemporales,partidos)), gruposTemporales));
+        
+        
+    }
+
     public ArrayList<Partido> filtrarPartidosPorGrupo(ArrayList<Grupo> gruposPara, ArrayList<Partido> partidosPara) {
         ArrayList<Partido> partidosTemporales = new ArrayList<>();
         for (Grupo g : gruposPara) {
@@ -422,16 +438,18 @@ public class ControladorCodeball {
         }
         return partidosTemporales;
     }
-    
-    public HashMap<Jugador, Penalizacion> JugadoresPenalizados(ArrayList<Partido> partidosTemporales){
+
+    public HashMap<Jugador, Penalizacion> jugadoresPenalizados(ArrayList<Partido> partidosTemporales) {
         HashMap<Jugador, Penalizacion> jugadoresPenalizados = new HashMap<>();
-//        for(Partido p : partidosTemporales){
-//            for(Jugador j: p.getFaltas().keySet()){
-//                
-//            }
-//        }
-//        
-        
+        for (Partido p : partidosTemporales) {
+            for (Jugador j : p.getFaltas().keySet()) {
+                for (TipoFalta t : p.getFaltas().get(j)) {
+                    if (!(t.getPenalizacion().equals(null))) {
+                        jugadoresPenalizados.put(j, t.getPenalizacion());
+                    }
+                }
+            }
+        }
         return jugadoresPenalizados;
     }
 
@@ -441,7 +459,7 @@ public class ControladorCodeball {
 //    Equipo            [x]
 //    EquipoTemporada   [x]
 //    FaseEliminatoria  []
-//    FasePuntos        []
+//    FasePuntos        [x]
 //    Grupo             [x]
 //    Partido           [x]
 //    Torneo            []
