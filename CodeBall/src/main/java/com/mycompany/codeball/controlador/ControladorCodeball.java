@@ -86,6 +86,28 @@ public class ControladorCodeball {
 //
 //    }
     
+// --------------------------- CARGAR JUGADORES DESDE DB ----------------------------------------
+    
+//    public ArrayList<Jugador> cargarJugadores() throws SQLException {
+//        String sql = "SELECT * FROM jugador";
+//        try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+//            while (rs.next()) {
+//                Jugador j = new Jugador(
+//                        rs.getString("dni"),
+//                        rs.getString("nombre"),
+//                        rs.getString("apellido"),
+//                        rs.getDate("fecha_nacimiento"),
+//                        rs.getInt("id_posicion"),
+//                        rs.getInt("id_equipo")
+//                );
+//                System.out.println("Cargando jugador: " + rs.getString("nombre"));
+//                jugadores.add(j);
+//            }
+//        }
+//        return jugadores;
+//    }
+    
+    
     // ------------------------------- ASIGNAR JUGADORES A EQUIPOS DESDE DB --------------------------------------
     
 //     public ArrayList<EquipoTemporada> asignarJugadoresAEquipos(ArrayList<Equipo> equipos, ArrayList<Jugador> jugadores) {
