@@ -21,14 +21,14 @@ public class Vista {
         return (sc.nextLine()); 
     }
     
-    public Date pedirFecha(){
+    public String pedirFecha(){
         mensaje("Ingrese el año: ");
         String anio = pedirString();
         mensaje("Ingrese el mes: ");
         String mes = pedirString();
         mensaje("Ingrese el dia: ");
         String dia = pedirString();
-        Date fecha = Date.valueOf(anio+"-"+mes+"-"+dia);        
+        String fecha = (anio+"-"+mes+"-"+dia);        
         return fecha; 
     }
     
@@ -59,12 +59,13 @@ public class Vista {
         mensaje("Elija una opción: " +
                 "\n1-Registrar nuevo Jugador: " +
                 "\n2-Registrar nuevo Equipo: " +
-                "\n3-Registrar Árbitro: " +
-                "\n4-Registrar Partido" +
-                "\n5-Registrar Torneo" +
-                "\n6-Seleccionar Torneo: " +
-                "\n7-Lista de Jugadores: " +
-                "\n8-Lista de Equipos por tiempo: " +
+                "\n3-Registrar nuevo Equipo: " +
+                "\n4-Registrar Árbitro: " +
+                "\n5-Registrar Partido" +
+                "\n6-Registrar Torneo" +
+                "\n7-Seleccionar Torneo: " +
+                "\n8-Lista de Jugadores: " +
+                "\n9-Lista de Equipos por tiempo: " +
                 "\n0-Salir");
     }
     

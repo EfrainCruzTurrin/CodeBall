@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashMap;
 
@@ -101,7 +102,7 @@ public class ControladorCodeball {
         vista.mensaje("Ingrese el apellido.");
         String apellido = vista.pedirString();
         vista.mensaje("Ingrese la fecha de nacimiento.");
-        Date fecha = vista.pedirFecha();
+        Date fecha = Date.valueOf(vista.pedirFecha());
 
         boolean existencia = false;
         for (Jugador j : jugadores) {
@@ -128,7 +129,7 @@ public class ControladorCodeball {
         vista.mensaje("Ingrese el apellido.");
         String apellido = vista.pedirString();
         vista.mensaje("Ingrese la fecha de nacimiento.");
-        Date fecha = vista.pedirFecha();
+        Date fecha = Date.valueOf(vista.pedirFecha());
 
         boolean existencia = false;
         for (Arbitro a : arbitros) {
@@ -168,7 +169,7 @@ public class ControladorCodeball {
 //    private Equipo equipo;
 //    private ArrayList<Jugador> jugadores = new ArrayList<>();
         vista.mensaje("Inserte a fecha de su creacion.");
-        Date fecha = vista.pedirFecha();
+        Date fecha = Date.valueOf(vista.pedirFecha());
 
         vista.mensaje("Seleccione al equipo que representa.");
         int contador = 1;
@@ -239,7 +240,7 @@ public class ControladorCodeball {
 //    }
 
         vista.mensaje("Inserte la fecha del partido.");
-        Date fecha = vista.pedirFecha();
+        Date fecha = Date.valueOf(vista.pedirFecha());
 
         vista.mensaje("Seleccione a dos equipos.");
         int contador = 1;
@@ -646,9 +647,10 @@ public class ControladorCodeball {
     }
 
     public void ejecutarMenuPrincipal() {
-        vista.mostrarMenu();
+        
         int opcion = 0;
         do {
+            vista.mostrarMenu();
             opcion = vista.pedirInt();
             switch (opcion) {
                 case 1 -> {
@@ -660,26 +662,30 @@ public class ControladorCodeball {
                     break;
                 }
                 case 3 -> {
-                    registrarArbitro();
+                    registrarEquipoTemporada();
                     break;
                 }
                 case 4 -> {
-                    registrarPartido();
+                    registrarArbitro();
                     break;
                 }
                 case 5 -> {
-                    registrarTorneo();
+                    registrarPartido();
                     break;
                 }
                 case 6 -> {
-                    ejecutarMenuTorneo();
+                    registrarTorneo();
                     break;
                 }
                 case 7 -> {
-                    listarJugadores();
+                    ejecutarMenuTorneo();
                     break;
                 }
                 case 8 -> {
+                    listarJugadores();
+                    break;
+                }
+                case 9 -> {
                     listarEquiposPorTemporada();
                     break;
                 }
@@ -713,9 +719,11 @@ public class ControladorCodeball {
     }
 
     public void ejecutarMenuTorneo() {
-        vista.mostrarMenuTorneo();
+        
         int opcion = 0;
+        
         do {
+            vista.mostrarMenuTorneo();
             opcion = vista.pedirInt();
             switch (opcion) {
                 case 1 -> {
