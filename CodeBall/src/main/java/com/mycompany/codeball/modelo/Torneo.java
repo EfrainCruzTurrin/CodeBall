@@ -9,13 +9,13 @@ public class Torneo {
     private FasePuntos fasePuntos;
     private FaseEliminatoria faseEliminatoria;
 
-    public Torneo(String descripcion, ArrayList<EquipoTemporada> equipos, FasePuntos fasePuntos, FaseEliminatoria faseEliminatoria) {
+    public Torneo(String descripcion, FaseEliminatoria faseEliminatoria) {
         this.descripcion = descripcion;
-        this.equipos = equipos;
-        this.fasePuntos = fasePuntos;
         this.faseEliminatoria = faseEliminatoria;
+        this.fasePuntos = conseguirFasePuntos(faseEliminatoria);
+        this.equipos = conseguirEquipoEnBaseAFase(this.fasePuntos);
     }
-
+  
     public Torneo() {
     }
 
@@ -50,5 +50,18 @@ public class Torneo {
     public void setFaseEliminatoria(FaseEliminatoria faseEliminatoria) {
         this.faseEliminatoria = faseEliminatoria;
     }
-
+    
+    public ArrayList<EquipoTemporada> conseguirEquipoEnBaseAFase(FasePuntos fase){
+        ArrayList<EquipoTemporada> equipos = new ArrayList<>();
+        for(Grupo g: fase.getGrupos()){
+            for(EquipoTemporada e: g.getEquipos()){
+                equipos.add(e);
+            }
+        }
+        return equipos;
+    }
+    
+    public FasePuntos conseguirFasePuntos(FaseEliminatoria faseE){
+        return faseE.getFasePuntos();
+    }
 }

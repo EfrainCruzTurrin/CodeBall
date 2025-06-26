@@ -4,17 +4,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class FaseEliminatoria extends Fase {
-
+    private FasePuntos fasePuntos;
     private ArrayList<EquipoTemporada> equiposIniciales = new ArrayList<>();
-    private HashMap<EquipoTemporada, FaseDeEliminatoria> equiposEliminados = new HashMap<>();
+    private HashMap<Partido, FaseDeEliminatoria> equiposEliminados = new HashMap<>();
     
 
-    public FaseEliminatoria(ArrayList<Partido> partidos, HashMap<Jugador, Penalizacion> jugadoresPenalizados, ArrayList<EquipoTemporada> equiposIniciales, HashMap<EquipoTemporada, FaseDeEliminatoria> equiposEliminados) {
+    public FaseEliminatoria(FasePuntos fasePuntos,ArrayList<Partido> partidos, HashMap<Jugador, Penalizacion> jugadoresPenalizados, ArrayList<EquipoTemporada> equiposIniciales, HashMap<Partido, FaseDeEliminatoria> equiposEliminados) {
+          
         super("Eliminatoria", partidos, jugadoresPenalizados);
+        this.fasePuntos = fasePuntos;
         this.equiposIniciales = equiposIniciales;
         this.equiposEliminados = equiposEliminados;
-    }
-
+    } 
+     
     public FaseEliminatoria() {
     }
 
@@ -22,17 +24,26 @@ public class FaseEliminatoria extends Fase {
         return equiposIniciales;
     }
 
-    public HashMap<EquipoTemporada, FaseDeEliminatoria> getEquiposEliminados() {
+    public HashMap<Partido, FaseDeEliminatoria> getEquiposEliminados() {
         return equiposEliminados;
+    }
+
+    public FasePuntos getFasePuntos() {
+        return fasePuntos;
     }
 
     public void setEquiposIniciales(ArrayList<EquipoTemporada> equiposIniciales) {
         this.equiposIniciales = equiposIniciales;
     }
 
-    public void setEquiposEliminados(HashMap<EquipoTemporada, FaseDeEliminatoria> equiposEliminados) {
+    public void setEquiposEliminados(HashMap<Partido, FaseDeEliminatoria> equiposEliminados) {
         this.equiposEliminados = equiposEliminados;
     }
+
+    public void setFasePuntos(FasePuntos fasePuntos) {
+        this.fasePuntos = fasePuntos;
+    }
+    
 
     @Override
     public String toString() {

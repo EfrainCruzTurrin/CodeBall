@@ -1,0 +1,14 @@
+com\mycompany\codeball\modelo\Posicion.class
+com\mycompany\codeball\modelo\Arbitro.class
+com\mycompany\codeball\modelo\FasePuntos.class
+com\mycompany\codeball\modelo\Penalizacion.class
+com\mycompany\codeball\modelo\Fase.class
+com\mycompany\codeball\modelo\Torneo.class
+com\mycompany\codeball\modelo\TipoFalta.class
+com\mycompany\codeball\CodeBall.class
+com\mycompany\codeball\modelo\EquipoTemporada.class
+com\mycompany\codeball\modelo\FaseDeEliminatoria.class
+com\mycompany\codeball\modelo\Jugador.class
+com\mycompany\codeball\modelo\Equipo.class
+com\mycompany\codeball\modelo\Partido.class
+com\mycompany\codeball\modelo\FaseEliminatoria.class

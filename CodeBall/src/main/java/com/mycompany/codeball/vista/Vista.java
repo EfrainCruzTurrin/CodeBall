@@ -53,39 +53,28 @@ public class Vista {
             datoBool = false;
         } 
         return datoBool;
-    }
-     
+    }  
+      
     public void mostrarMenu(){
         mensaje("Elija una opción: " +
                 "\n1-Registrar nuevo Jugador: " +
                 "\n2-Registrar nuevo Equipo: " +
                 "\n3-Registrar Árbitro: " +
-                "\n4-Registrar Torneo" +
-                "\n5-Registrar Partido" +
-                "\n6-Registrar Torneo" +
-                "\n7-Seleccionar Torneo: " +
-                "\n8-Lista de Jugadores: " +
-                "\n9-Lista de Equipos: " +
-                "\n10-Lista de Equipos por tiempo: " +
+                "\n4-Registrar Partido" +
+                "\n5-Registrar Torneo" +
+                "\n6-Seleccionar Torneo: " +
+                "\n7-Lista de Jugadores: " +
+                "\n8-Lista de Equipos por tiempo: " +
                 "\n0-Salir");
     }
     
     public void mostrarMenuTorneo(){
         mensaje("Elija una opción: " +
                 "\n1-Mostrar Resultados: " +
-                "\n2-Listar Equipos: " +
-                "\n4-Listar Partidos" +
-                "\n4-Resultado de Fase de Puntos" +
-                "\n5-Resultado de Eliminatorias" +
+                "\n2-Listar Partidos" +
+                "\n3-Listar Equipos" +
                 "\n0-Salir");
     }
 
-    public void mostrarMenuEquipo(){
-        mensaje("Elija una opción: " +
-                "\n1-Mostrar Partidos: " +
-                "\n2-Listar Equipos: " +
-                "\n4-Listar Partidos" +
-                "\n4-Resultado de Fase de Puntos" +
-                "\n0-Salir");
-    }
+   
 }  

@@ -26,9 +26,8 @@ import java.util.ArrayList;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  *
@@ -66,7 +65,6 @@ public class ControladorCodeball {
         }
     }
 
-    // ----------------- CARGAR EQUIPOS DESDE DB ------------------------------- //
 //    public void cargarEquipos() throws SQLException {
 //        String sql = "SELECT id_equipo, nombre, pais, director_tecnico FROM equipo";
 //        int puntos = 0;
@@ -84,51 +82,6 @@ public class ControladorCodeball {
 //            }
 //        }
 //
-//    }
-// --------------------------- CARGAR JUGADORES DESDE DB ----------------------------------------
-//    public ArrayList<Jugador> cargarJugadores() throws SQLException {
-//        String sql = "SELECT * FROM jugador";
-//        try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
-//            while (rs.next()) {
-//                Jugador j = new Jugador(
-//                        rs.getString("dni"),
-//                        rs.getString("nombre"),
-//                        rs.getString("apellido"),
-//                        rs.getDate("fecha_nacimiento"),
-//                        rs.getInt("id_posicion"),
-//                        rs.getInt("id_equipo")
-//                );
-//                System.out.println("Cargando jugador: " + rs.getString("nombre"));
-//                jugadores.add(j);
-//            }
-//        }
-//        return jugadores;
-//    }
-    // ------------------------------- ASIGNAR JUGADORES A EQUIPOS DESDE DB --------------------------------------
-//     public ArrayList<EquipoTemporada> asignarJugadoresAEquipos(ArrayList<Equipo> equipos, ArrayList<Jugador> jugadores) {
-//
-//        Map<Integer, Equipo> mapaEquipos = new HashMap<>();
-//        for (Equipo e : equipos) {
-//            mapaEquipos.put(e.getIdEquipo(), e);
-//        }
-//        Map<Integer, EquipoTemporada> mapaTemporadas = new HashMap<>();
-//
-//        for (Jugador jugador : jugadores) {
-//            int idEq = jugador.getIdEquipo();
-//
-//            if (mapaEquipos.containsKey(idEq)) {
-//                if (!mapaTemporadas.containsKey(idEq)) {
-//                    Equipo equipo = mapaEquipos.get(idEq);
-//                    EquipoTemporada et = new EquipoTemporada(equipo);
-//                    mapaTemporadas.put(idEq, et);
-//                }
-//                mapaTemporadas.get(idEq).agregarJugador(jugador);
-//            } else {
-//                System.out.println("Jugador " + jugador.getNombre() + " tiene un idEquipo inválido: " + idEq);
-//            }
-//        }
-//
-//        return new ArrayList<>(mapaTemporadas.values());
 //    }
     public void listarEquipos() {
         for (Equipo e : equipos) {
@@ -159,29 +112,7 @@ public class ControladorCodeball {
         if (existencia) {
             vista.mensaje("Ese codigo de identificacion ya existe.");
         } else {
-            String sql = "INSERT INTO jugador (dni, nombre, apellido, fecha_nacimiento) VALUES (?, ?, ?, ?)";
-            try (PreparedStatement stmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-                stmt.setInt(1, dni);
-                stmt.setString(2, nombre);
-                stmt.setString(3, apellido);
-                stmt.setDate(4, new java.sql.Date(fecha.getTime()));
-
-                int filasInsertadas = stmt.executeUpdate();
-
-                if (filasInsertadas > 0) {
-                    try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-                        if (generatedKeys.next()) {
-                            int idJugadorGenerada = generatedKeys.getInt(1);
-                            Jugador nuevoJugador = new Jugador(idJugadorGenerada, dni, nombre, apellido, fecha);
-                            jugadores.add(nuevoJugador);
-                            vista.mensaje("Jugador registrado exitosamente con ID: " + idJugadorGenerada);
-                        }
-                    }
-                }
-            } catch (SQLException e) {
-                vista.mensaje("Error al insertar el jugador: " + e.getMessage());
-            }
-
+            jugadores.add(new Jugador(dni, nombre, apellido, fecha));
         }
     }
 
@@ -291,7 +222,7 @@ public class ControladorCodeball {
         }
     }
 
-    public void registrarPartido() throws SQLException {
+    public void registrarPartido() {
 //      private Date fecha;
 //      private ArrayList<EquipoTemporada> equipos = new ArrayList<>();
 //      private HashMap<Jugador, ArrayList<TipoFalta>> faltas = new HashMap<>();
@@ -413,75 +344,7 @@ public class ControladorCodeball {
         }
 
         partidos.add(new Partido(fecha, equiposTemporales, faltas, golesTemporales, penalesTemporales));
-
-        // ---------------- INSERTAR PARTIDO EN BD ---------------------------     
-//        String sqlPartido = "INSERT INTO partido (id_fase, id_equipo_temporada_local, id_equipo_temporada_visitante, goles_local, goles_visitante) VALUES (?, ?, ?, ?, ?)";
-//        int idPartidoGenerado = 0;
-//
-//        try (PreparedStatement stmt = con.prepareStatement(sqlPartido, Statement.RETURN_GENERATED_KEYS)) {
-//            
-//            stmt.setInt(1, idFase); 
-//            stmt.setInt(2, equipoLocalId); 
-//            stmt.setInt(3, equipoVisitanteId); 
-//            stmt.setInt(4, golesLocal); 
-//            stmt.setInt(5, golesVisitante); 
-//
-//            int filasInsertadas = stmt.executeUpdate();
-//
-//            if (filasInsertadas > 0) {
-
-                // -------------- INSERTAR FALTAS -----------------------       
-                for (Map.Entry<Jugador, ArrayList<TipoFalta>> entry : faltas.entrySet()) {
-                    Jugador jugador = entry.getKey();
-                    for (TipoFalta tipoFalta : entry.getValue()) {
-                        String sqlFalta = "INSERT INTO falta (id_partido, id_jugador, tipo_falta) VALUES (?, ?, ?)";
-                        try (PreparedStatement stmtFalta = con.prepareStatement(sqlFalta)) {
-                            stmtFalta.setInt(1, idPartidoGenerado); // id_partido
-                            stmtFalta.setInt(2, jugador.getId());  // id_jugador
-                            stmtFalta.setString(3, tipoFalta.toString()); // tipo_falta
-                            stmtFalta.executeUpdate();
-                        } catch (SQLException e) {
-                            vista.mensaje("Error al insertar falta: " + e.getMessage());
-                        }
-                    }
-                }
-                // ----------------- GOLES --------------------
-                for (Map.Entry<EquipoTemporada, ArrayList<Jugador>> entry : golesTemporales.entrySet()) {
-                    EquipoTemporada equipo = entry.getKey();
-                    for (Jugador jugador : entry.getValue()) {
-                        String sqlGol = "INSERT INTO gol (id_partido, id_jugador, equipo) VALUES (?, ?, ?)";
-                        try (PreparedStatement stmtGol = con.prepareStatement(sqlGol)) {
-                            stmtGol.setInt(1, idPartidoGenerado);  // id_partido
-                            stmtGol.setInt(2, jugador.getId());   // id_jugador
-                            stmtGol.setString(3, equipo.getEquipo().getNombre()); // nombre del equipo
-                            stmtGol.executeUpdate();
-                        } catch (SQLException e) {
-                            vista.mensaje("Error al insertar gol: " + e.getMessage());
-                        }
-                    }
-                }
-                // -------------------- PENALES --------------------- 
-                if (penalesTemporales.size() > 0) {
-                    for (Map.Entry<EquipoTemporada, ArrayList<Jugador>> entry : penalesTemporales.entrySet()) {
-                        EquipoTemporada equipo = entry.getKey();
-                        for (Jugador jugador : entry.getValue()) {
-                            String sqlPenal = "INSERT INTO penal (id_partido, id_jugador, equipo) VALUES (?, ?, ?)";
-                            try (PreparedStatement stmtPenal = con.prepareStatement(sqlPenal)) {
-                                stmtPenal.setInt(1, idPartidoGenerado); // id_partido
-                                stmtPenal.setInt(2, jugador.getId());  // id_jugador
-                                stmtPenal.setString(3, equipo.getEquipo().getNombre()); // nombre del equipo
-                                stmtPenal.executeUpdate();
-                            } catch (SQLException e) {
-                                vista.mensaje("Error al insertar penal: " + e.getMessage());
-                            }
-                        }
-                    }
-                }
-            }
-
-    
-
-    
+    }
 
     public ArrayList<TipoFalta> registrarFaltas() {
         vista.mensaje("Que faltas cometio?");
@@ -566,14 +429,33 @@ public class ControladorCodeball {
 
     public ArrayList<Partido> filtrarPartidosPorGrupo(ArrayList<Grupo> gruposPara, ArrayList<Partido> partidosPara) {
         ArrayList<Partido> partidosTemporales = new ArrayList<>();
+        vista.mensaje("Seleccione los partidos. Hasta que usted lo considere.");
         for (Grupo g : gruposPara) {
             for (Partido p : partidosPara) {
-                if (g.getEquipos().contains(p.getEquipos())) {
+                if (g.getEquipos().contains(p.getEquipos().get(0)) && g.getEquipos().contains(p.getEquipos().get(1))) {
+
                     partidosTemporales.add(p);
                 }
             }
         }
-        return partidosTemporales;
+        ArrayList<Partido> partidosFinales = new ArrayList<>();
+        int contador = 1;
+        vista.mensaje("0 | Salir.");
+        for (Partido p : partidosTemporales) {
+
+            vista.mensaje(contador + " | " + p.getFecha() + " | " + p.getEquipos().get(0) + " vs. " + p.getEquipos().get(1));
+        }
+        int numero = 0;
+        do {
+            numero = vista.pedirInt();
+            if ((numero < 1 || numero > partidosTemporales.size()) && numero != 0) {
+                vista.mensaje("Dato fuera de rango.");
+            } else if (numero == 0) {
+            } else {
+                partidosFinales.add(partidosTemporales.get(numero - 1));
+            }
+        } while (numero != 0);
+        return partidosFinales;
     }
 
     public HashMap<Jugador, Penalizacion> jugadoresPenalizados(ArrayList<Partido> partidosTemporales) {
@@ -590,31 +472,404 @@ public class ControladorCodeball {
         return jugadoresPenalizados;
     }
 
-//Registrar:
-//    Jugador           [x]
-//    Arbitro           [x]
-//    Equipo            [x]
-//    EquipoTemporada   [x]
-//    FaseEliminatoria  []
-//    FasePuntos        [x]
-//    Grupo             [x]
-//    Partido           [x]
-//    Torneo            []
-//    Falta el interior dejugadores Penalizados()    
-//Consultas:
-//    mostrarMenuTorneo(){
-//          "Elija una opción: " +          
-//          1-Mostrar Resultados: " +       []
-//          2-Listar Equipos: " +           []
-//          4-Listar Partidos" +            []
-//          5-Resultado de Fase de Puntos"  []
-//          6-Resultado de Eliminatorias"   []
-//    }
-//
-//    public void mostrarMenuEquipo(){
-//        mensaje("Elija una opción: " +            
-//                "\n1-Mostrar Partidos: " +        []
-//                "\n2-Listar Equipos: " +          []
-//                "\n4-Listar Partidos" +           []
-//                "\n4-Resultado de Fase de Puntos" []
+    public void registrarFaseEliminatoria() {
+//      
+//      FasePuntos fasePuntos,
+//      ArrayList<Partido> partidos, 
+//      HashMap<Jugador, Penalizacion> jugadoresPenalizados, 
+//      ArrayList<EquipoTemporada> equiposIniciales, 
+//      HashMap<Partido, FaseDeEliminatoria> equiposEliminados
+//        
+//          super("Eliminatoria", partidos, jugadoresPenalizados);
+//          this.fasePuntos = fasePuntos;
+//          this.equiposIniciales = equiposIniciales;
+//          this.equiposEliminados = equiposEliminados;
+//    
+        vista.mensaje("Seleccione a la fase de grupos de la que procede esta fase eliminatoria.");
+        int contador = 1;
+        int contador2 = 1;
+        for (FasePuntos f : fasesPuntos) {
+            vista.mensaje("Fase de grupos " + contador + ". ");
+            contador++;
+            contador2 = 1;
+            for (Grupo g : f.getGrupos()) {
+                vista.mensaje("Grupo " + contador2 + " | " + g.getEquipos().get(0).getEquipo().getNombre() + " | " + g.getEquipos().get(1).getEquipo().getNombre() + " | " + g.getEquipos().get(2).getEquipo().getNombre() + " | " + g.getEquipos().get(3).getEquipo().getNombre());
+                contador2++;
+            }
+        }
+
+        int numero;
+        FasePuntos fase = fasesPuntos.get(0);
+        do {
+            numero = vista.pedirInt() - 1;
+            if (numero < 0 || numero > (fasesPuntos.size() - 1)) {
+                vista.mensaje("Dato fuera de rango.");
+            } else {
+                fase = fasesPuntos.get(numero);
+            }
+
+        } while (numero < 0 || numero > (fasesPuntos.size() - 1));
+
+        ArrayList<EquipoTemporada> equiposDeInicio = new ArrayList<>();
+        equiposDeInicio = conseguirEquiposIniciales(fase);
+
+        HashMap<Jugador, Penalizacion> jugadoresPenalizados = new HashMap<>();
+        jugadoresPenalizados.putAll(fase.getJugadoresPenalizados());
+
+        vista.mensaje("Seleccione los partidos en orden.");
+        ArrayList<Partido> octavos = new ArrayList<>();
+        ArrayList<Partido> cuartos = new ArrayList<>();
+        ArrayList<Partido> semi = new ArrayList<>();
+        ArrayList<Partido> partidoFinal = new ArrayList<>();
+        ArrayList<Partido> partidosTemporales = new ArrayList<>();
+        for (Partido p : partidos) {
+            if (equiposDeInicio.contains(p.getEquipos().get(0)) && equiposDeInicio.contains(p.getEquipos().get(1))) {
+                partidosTemporales.add(p);
+            }
+        }
+
+        ArrayList<Partido> partidosFinales = new ArrayList<>();
+        contador = 1;
+        for (Partido p : partidosTemporales) {
+            vista.mensaje(contador + " | " + p.getFecha() + " | " + p.getEquipos().get(0) + " vs. " + p.getEquipos().get(1));
+        }
+        vista.mensaje("Elije los octavos");
+        do {
+
+            if (numero < 1 || numero > partidosTemporales.size()) {
+                vista.mensaje("Dato fuera de rango.");
+            } else {
+                octavos.add(partidosTemporales.get(numero - 1));
+            }
+
+        } while (octavos.size() < 8);
+
+        partidosFinales.addAll(octavos);
+
+        vista.mensaje("Elije los cuartos");
+        do {
+
+            if (numero < 1 || numero > partidosTemporales.size()) {
+                vista.mensaje("Dato fuera de rango.");
+            } else {
+                cuartos.add(partidosTemporales.get(numero - 1));
+            }
+
+        } while (cuartos.size() < 4);
+
+        partidosFinales.addAll(cuartos);
+
+        vista.mensaje("Elije las semi-finales");
+        do {
+
+            if (numero < 1 || numero > partidosTemporales.size()) {
+                vista.mensaje("Dato fuera de rango.");
+            } else {
+                semi.add(partidosTemporales.get(numero - 1));
+            }
+
+        } while (semi.size() < 2);
+
+        partidosFinales.addAll(semi);
+
+        vista.mensaje("Elije la final");
+        do {
+
+            if (numero < 1 || numero > partidosTemporales.size()) {
+                vista.mensaje("Dato fuera de rango.");
+            } else {
+                partidoFinal.add(partidosTemporales.get(numero - 1));
+            }
+
+        } while (partidoFinal.size() < 1);
+
+        partidosFinales.addAll(partidoFinal);
+        contador = 1;
+
+        HashMap<Partido, FaseDeEliminatoria> equiposEliminados = new HashMap<>();
+
+        for (Partido p : partidosFinales) {
+            if (contador < 9) {
+                equiposEliminados.put(p, fasesDeEliminatoria.get(0));
+            } else if (contador < 13) {
+                equiposEliminados.put(p, fasesDeEliminatoria.get(1));
+            } else if (contador < 15) {
+                equiposEliminados.put(p, fasesDeEliminatoria.get(2));
+            } else {
+                equiposEliminados.put(p, fasesDeEliminatoria.get(3));
+            }
+        }
+
+        fasesEliminatoria.add(new FaseEliminatoria(fase, partidosFinales, jugadoresPenalizados, conseguirEquiposIniciales(fase), equiposEliminados));
+    }
+
+    public ArrayList<EquipoTemporada> conseguirEquiposIniciales(FasePuntos fase) {
+        ArrayList<Grupo> gruposTemporales = new ArrayList<>();
+        gruposTemporales.addAll(fase.getGrupos());
+        ArrayList<EquipoTemporada> equiposTemporales = new ArrayList<>();
+        ArrayList<EquipoTemporada> equiposFinales = new ArrayList<>();
+        ArrayList<Integer> valores = new ArrayList<>();
+        int i;
+        for (Grupo g : gruposTemporales) {
+            equiposTemporales.clear();
+            valores.clear();
+            equiposTemporales.addAll(g.getEquipos());
+            for (EquipoTemporada e : equiposTemporales) {
+                if (g.getEquipos().contains(e)) {
+                    valores.add(fase.getPuntosTotalesPorEquipo().get(e));
+                }
+
+            }
+            for (i = 1; i < 3; i++) {
+                for (EquipoTemporada e : equiposTemporales) {
+
+                    valores.addAll(fase.getPuntosTotalesPorEquipo().values());
+                    if (fase.getPuntosTotalesPorEquipo().get(e).equals(Collections.max(valores))) {
+                        equiposFinales.add(e);
+                    }
+                }
+                valores.remove(Collections.max(valores));
+            }
+        }
+        return equiposFinales;
+
+    }
+
+    public void registrarTorneo() {
+//          public Torneo(String descripcion, 
+//          FasePuntos fasePuntos, 
+//          FaseEliminatoria faseEliminatoria)
+        vista.mensaje("Elija una descrpcion para el torneo. Puede ser un nombre o su forma de identificarlo.");
+        String descripcion = vista.pedirString();
+        vista.mensaje("Elija su Fase eliminatoria.");
+
+    }
+
+    public void ejecutarMenuPrincipal() {
+        vista.mostrarMenu();
+        int opcion = 0;
+        do {
+            opcion = vista.pedirInt();
+            switch (opcion) {
+                case 1 -> {
+                    registrarJugador();
+                    break;
+                }
+                case 2 -> {
+                    registrarEquipo();
+                    break;
+                }
+                case 3 -> {
+                    registrarArbitro();
+                    break;
+                }
+                case 4 -> {
+                    registrarPartido();
+                    break;
+                }
+                case 5 -> {
+                    registrarTorneo();
+                    break;
+                }
+                case 6 -> {
+                    ejecutarMenuTorneo();
+                    break;
+                }
+                case 7 -> {
+                    listarJugadores();
+                    break;
+                }
+                case 8 -> {
+                    listarEquiposPorTemporada();
+                    break;
+                }
+
+            }
+        } while (opcion != 0);
+    }
+
+    public void listarJugadores() {
+        int contador = 1;
+        vista.mensaje("N° | Nombre Completo | Fecha de nacimiento");
+        for (Jugador j : jugadores) {
+
+            vista.mensaje(contador + " | " + j.getNombre() + " " + j.getApellido() + " | " + j.getFechaNacimiento());
+            contador++;
+        }
+
+    }
+
+    public void listarEquiposPorTemporada() {
+        int contador = 1;
+        vista.mensaje("N° | Fecha de creacion | Nombre de equipo | Jugadores");
+        for (EquipoTemporada e : equiposTemporada) {
+            vista.mensaje(contador + " | " + e.getFechaCreacion() + " | " + e.getEquipo().getNombre() + " | ");
+            for (Jugador j : e.getJugadores()) {
+                System.out.print(j.getNombre() + " " + j.getApellido() + ", ");
+            }
+            contador++;
+        }
+
+    }
+
+    public void ejecutarMenuTorneo() {
+        vista.mostrarMenuTorneo();
+        int opcion = 0;
+        do {
+            opcion = vista.pedirInt();
+            switch (opcion) {
+                case 1 -> {
+                    mostrarResultados();
+                    break;
+                }
+                case 2 -> {
+                    listarPartidosTorneo();
+                    break;
+                }
+                case 3 -> {
+                    listarEquipoTorneo();
+                    break;
+                }
+            }
+        } while (opcion != 0);
+
+    }
+
+    public void mostrarResultados() {
+        vista.mensaje("Seleccione un torneo.");
+        int contador = 1;
+
+        for (Torneo t : torneos) {
+            vista.mensaje(contador + " | " + t.getDescripcion());
+        }
+
+        int numero = vista.pedirInt();
+        vista.mensaje("Fase de grupos:");
+        for (contador = 1; contador < 9; contador++) {
+
+            vista.mensaje("Grupo" + contador + ": ");
+
+            for (int contador2 = 0; contador2 > 3; contador2++) {
+                vista.mensaje("Equipo " + (contador2 + 1) + torneos.get(numero).getFasePuntos().getGrupos().get(contador - 1).getEquipos().get(contador2).getEquipo().getNombre());
+            }
+        }
+
+        vista.mensaje("Fase de Eliminatoria: ");
+        contador = 1;
+        for(Partido p:torneos.get(numero).getFaseEliminatoria().getEquiposEliminados().keySet()){
+            if(contador < 9){
+                if(contador == 1){
+                    vista.mensaje("Octavos: ");
+                }
+                for(int i = 0;i<2;i++){
+                    System.out.print(p.getEquipos().get(i));
+                    if(i == 0){
+                        System.out.print(" vs. ");
+                    }
+                }
+                
+            }
+            if(contador < 13){
+                if(contador == 9){
+                    vista.mensaje("Cuartos: ");
+                }
+                for(int i = 0;i<2;i++){
+                    System.out.print(p.getEquipos().get(i));
+                    if(i == 0){
+                        System.out.print(" vs. ");
+                    }
+                }
+                
+            }
+            if(contador < 15){
+                if(contador == 13){
+                    vista.mensaje("Semi-finales: ");
+                }
+                for(int i = 0;i<2;i++){
+                    System.out.print(p.getEquipos().get(i));
+                    if(i == 0){
+                        System.out.print(" vs. ");
+                    }
+                }
+                
+            }else{
+                vista.mensaje("Final: ");
+                for(int i = 0;i<2;i++){
+                    System.out.print(p.getEquipos().get(i));
+                    if(i == 0){
+                        System.out.print(" vs. ");
+                    }
+                }
+            }
+            
+            contador++;
+        }
+        
+    }
+    
+    public void listarPartidosTorneo(){
+        vista.mensaje("Seleccione un torneo.");
+        int contador = 1;
+
+        for (Torneo t : torneos) {
+            vista.mensaje(contador + " | " + t.getDescripcion());
+        }
+
+        int numero = vista.pedirInt();
+        vista.mensaje("Fase de grupos:");
+        
+        
+    }
+    
+    public void listarEquipoTorneo() {
+        vista.mensaje("Seleccione un torneo.");
+        int contador = 1;
+
+        for (Torneo t : torneos) {
+            vista.mensaje(contador + " | " + t.getDescripcion());
+        }
+
+        int numero = vista.pedirInt();
+        contador = 1;
+        for(EquipoTemporada e: torneos.get(numero).getEquipos()){
+            vista.mensaje(contador + " | " + e.getEquipo().getNombre() );
+        }
+    }
+
+//    public void mostrarMenu(){
+    //        mensaje("Elija una opción: " +
+    //                "\n1-Registrar nuevo Jugador: " +
+    //                "\n2-Registrar nuevo Equipo: " +
+    //                "\n3-Registrar Árbitro: " +
+    //                "\n4-Registrar Torneo" +
+    //                "\n5-Registrar Partido" +
+    //                "\n6-Registrar Torneo" +
+    //                "\n7-Seleccionar Torneo: " +
+    //                "\n8-Lista de Jugadores: " +
+    //                "\n9-Lista de Equipos: " +
+    //                "\n10-Lista de Equipos por tiempo: " +
+    //                "\n0-Salir");
+    //Registrar:
+    //    Jugador           [x]
+    //    Arbitro           [x]
+    //    Equipo            [x]
+    //    EquipoTemporada   [x]
+    //    FaseEliminatoria  [x]
+    //    FasePuntos        [x]
+    //    Grupo             [x]
+    //    Partido           [x]
+    //    Torneo            [x] 
+    //Consultas:
+    //    mostrarMenuTorneo(){                  []
+    //          "Elija una opción: " +          
+    //          1-Mostrar Resultados: " +       []
+    //          2-Listar Equipos: " +           []
+    //          3-Listar Partidos" +            []
+    //    }
+    //
+    //    public void mostrarMenuEquipo(){              []
+    //        mensaje("Elija una opción: " +            
+    //                "\n1-Mostrar Partidos: " +        []
+    //                "\n2-Listar Equipos: " +          []
+    //                "\n4-Listar Partidos" +           []
 }
